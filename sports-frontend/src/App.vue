@@ -96,13 +96,12 @@ export default {
   data() {
     return {
       columns: [
-        { name: "id", label: "ID", field: "id", align: 'left' },
-        { name: "status", label: "Status", field: "status", align: 'left' },
-        { name: "match", label: "Match", field: "match", align: 'left' },
+        { name: "match_name", label: "Match", field: "match_name", align: 'left' },
         { name: "sport", label: "Sport", field: "sport", align: 'left' },
-        { name: "pre_odds", label: "Pre-Match", field: "pre_odds", align: 'center' },
-        { name: "live_odds", label: "Live Odds", field: "live_odds", align: 'center' },
-        { name: "trend", label: "Change", field: "trend", align: 'center' }
+        { name: "status", label: "Status", field: "status", align: 'left' },
+        { name: "pre_odds", label: "Pre-match Odds", field: "pre_odds", align: 'right' },
+        { name: "live_odds", label: "Live Odds", field: "live_odds", align: 'right' },
+        { name: "trend", label: "Trend", field: "trend", align: 'right' }
       ],
       events: [],
       loading: false,
@@ -139,8 +138,9 @@ export default {
     async fetchOdds() {
       this.loading = true
       try {
-        const res = await fetch('/mock_odds.json')
-        this.events = await res.json()
+        const res = await fetch('http://localhost:5000/api/odds/live')
+        const response = await res.json()
+        this.events = response.data
         this.lastUpdateTime = new Date().toLocaleTimeString()
       } catch (err) {
         console.error('Error fetching odds:', err)
