@@ -5,7 +5,7 @@ Fetch soccer in-play events.
 import requests
 import logging
 from typing import Dict, List, Optional
-from config import API_CREDENTIALS, API_URLS, REQUEST_CONFIG
+from aggregator.config import API_CREDENTIALS, API_URLS, REQUEST_CONFIG
 
 logger = logging.getLogger(__name__)
 

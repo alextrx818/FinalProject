@@ -6,7 +6,7 @@ import psycopg2
 from psycopg2.extras import RealDictCursor
 from typing import Dict, List
 import logging
-from config import DB_CONFIG
+from ..config import DB_CONFIG
 
 logger = logging.getLogger(__name__)
 
@@ -16,13 +16,11 @@ class DatabaseManager:
 
     def get_connection(self):
         """Create a new database connection"""
-        return psycopg2.connect(
-            host=self.config["host"],
-            database=self.config["database"],
-            user=self.config["user"],
-            password=self.config["password"],
-            cursor_factory=RealDictCursor
-        )
+        try:
+            return psycopg2.connect(**self.config)
+        except psycopg2.Error as e:
+            logger.error(f"Error connecting to database: {str(e)}")
+            return None
 
     def store_tennis_data(self, data: List[Dict]):
         """Store tennis match data in the database"""

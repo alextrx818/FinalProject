@@ -13,9 +13,6 @@ API_CREDENTIALS = {
     "bet365": {
         "api_key": os.getenv("BET365_API_KEY", "750ad01770msh9716fc05e7ecc56p15565fjsn93e405806783"),
         "api_host": "bet365-api-inplay.p.rapidapi.com"
-    },
-    "betsapi": {
-        "api_key": os.getenv("BETSAPI_KEY")
     }
 }
 
@@ -29,8 +26,14 @@ DB_CONFIG = {
 
 # API Base URLs
 API_URLS = {
-    "bet365": "https://bet365-api-inplay.p.rapidapi.com/bet365",
-    "betsapi": "https://api.betsapi.com/v1"
+    "bet365": "https://bet365-api-inplay.p.rapidapi.com/bet365"
+}
+
+# API Endpoints
+API_ENDPOINTS = {
+    "tennis": {
+        "inplay_events": "/get_sport_events/tennis"
+    }
 }
 
 # API Request Settings
