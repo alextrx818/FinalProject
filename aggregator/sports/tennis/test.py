@@ -45,9 +45,13 @@ async def main():
         markets = odds_data.get('markets', [])
         print(f"Number of markets: {len(markets)}")
         
-        # Show first few markets as example
-        for market in markets[:3]:
-            print(f"\nMarket: {market.get('name', 'Unknown')}")
+        # Show first market as example
+        if markets:
+            market = markets[0]  # Get first market
+            print(f"\nExample Market Data:")
+            print(f"Market Name: {market.get('name')}")
+            print(f"Market ID: {market.get('id')}")
+            print("Odds:")
             for odd in market.get('odds', []):
                 print(f"  {odd.get('name')}: {odd.get('odds')}")
         

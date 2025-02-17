@@ -5,7 +5,6 @@ Extends the core DatabaseManager with tennis-focused functionality.
 
 import logging
 from typing import Dict, List, Optional, Any
-from ...database.db_utils import DatabaseManager
 
 logger = logging.getLogger(__name__)
 
@@ -19,7 +18,8 @@ class TennisDatabase:
     """
 
     def __init__(self):
-        self.db = DatabaseManager()
+        # TODO: Initialize database connection
+        pass
 
     async def store_rapid_tennis_data(self, matches: List[Dict[str, Any]]) -> bool:
         """
@@ -44,8 +44,8 @@ class TennisDatabase:
                 })
             
             if formatted_matches:
-                self.db.store_tennis_data(formatted_matches)
-                logger.info(f"Stored {len(formatted_matches)} RapidAPI tennis matches")
+                # TODO: Implement database storage
+                logger.info(f"Would store {len(formatted_matches)} RapidAPI tennis matches")
                 return True
             return False
             
@@ -76,8 +76,8 @@ class TennisDatabase:
                 })
             
             if formatted_matches:
-                self.db.store_tennis_data(formatted_matches)
-                logger.info(f"Stored {len(formatted_matches)} BetsAPI tennis matches")
+                # TODO: Implement database storage
+                logger.info(f"Would store {len(formatted_matches)} BetsAPI tennis matches")
                 return True
             return False
             
@@ -88,7 +88,8 @@ class TennisDatabase:
     def get_live_matches(self) -> List[Dict[str, Any]]:
         """Get all live tennis matches from the database"""
         try:
-            return self.db.get_live_tennis_matches()
+            # TODO: Implement database retrieval
+            return []
         except Exception as e:
             logger.error(f"Error retrieving live tennis matches: {e}")
             return []
@@ -104,27 +105,12 @@ class TennisDatabase:
             Optional[Dict]: Match data if found, None if not found
         """
         try:
-            conn = self.db.get_connection()
-            cur = conn.cursor()
-            
-            cur.execute("""
-                SELECT * FROM tennis_odds 
-                WHERE match_id = %s
-                ORDER BY timestamp DESC 
-                LIMIT 1
-            """, (match_id,))
-            
-            result = cur.fetchone()
-            return dict(result) if result else None
+            # TODO: Implement database retrieval
+            return None
             
         except Exception as e:
             logger.error(f"Error retrieving tennis match {match_id}: {e}")
             return None
-        finally:
-            if 'cur' in locals():
-                cur.close()
-            if 'conn' in locals():
-                conn.close()
 
 # Quick test of the database operations
 if __name__ == "__main__":
