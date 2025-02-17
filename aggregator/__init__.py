@@ -1,7 +1,6 @@
 """
 Sports data aggregation package.
+Contains modules for fetching and processing sports odds data.
 """
 
-from .aggregator import SportsAggregator
-
-__all__ = ['SportsAggregator']
+__all__ = []
