@@ -160,8 +160,8 @@ class TennisMerger:
         for rapid_idx, rd in enumerate(rapid_data):
             try:
                 event_data = rd.get("raw_event_data", {})
-                rapid_home = event_data.get("home_player", "")
-                rapid_away = event_data.get("away_player", "")
+                rapid_home = event_data.get("team1", "")
+                rapid_away = event_data.get("team2", "")
 
                 found_match = False
                 # Look for matching BetsAPI record
