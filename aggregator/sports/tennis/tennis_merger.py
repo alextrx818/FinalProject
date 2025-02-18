@@ -104,16 +104,21 @@ class TennisMerger:
         if threshold is None:
             threshold = self.FUZZ_THRESHOLD
 
+        norm_rapid_home = self.normalize_name(rapid_home)
+        norm_rapid_away = self.normalize_name(rapid_away)
+        norm_bets_home = self.normalize_name(bets_home)
+        norm_bets_away = self.normalize_name(bets_away)
+
         # Try direct match (home->home, away->away)
         direct_match = (
-            self.fuzzy_match_names(rapid_home, bets_home, threshold) and
-            self.fuzzy_match_names(rapid_away, bets_away, threshold)
+            self.fuzzy_match_names(norm_rapid_home, norm_bets_home, threshold) and
+            self.fuzzy_match_names(norm_rapid_away, norm_bets_away, threshold)
         )
         
         # Try flipped match (home->away, away->home)
         flipped_match = (
-            self.fuzzy_match_names(rapid_home, bets_away, threshold) and
-            self.fuzzy_match_names(rapid_away, bets_home, threshold)
+            self.fuzzy_match_names(norm_rapid_home, norm_bets_away, threshold) and
+            self.fuzzy_match_names(norm_rapid_away, norm_bets_home, threshold)
         )
         
         return direct_match or flipped_match
