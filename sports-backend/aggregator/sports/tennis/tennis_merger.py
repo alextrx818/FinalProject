@@ -216,8 +216,8 @@ class TennisMerger:
                         matched_indices.add(idx)
                         id_matches += 1
                         merged_records.append({
-                            "home_player": bets_home,
-                            "away_player": bets_away,
+                            "home_player": rapid_home or bets_home,  # Prefer RapidAPI names
+                            "away_player": rapid_away or bets_away,  # Fall back to BetsAPI if RapidAPI is empty
                             "betsapi_data": bd,
                             "rapid_data": rd
                         })
@@ -229,8 +229,8 @@ class TennisMerger:
                     found_match = True
                     matched_indices.add(idx)
                     merged_records.append({
-                        "home_player": bets_home,
-                        "away_player": bets_away,
+                        "home_player": rapid_home or bets_home,  # Prefer RapidAPI names
+                        "away_player": rapid_away or bets_away,  # Fall back to BetsAPI if RapidAPI is empty
                         "betsapi_data": bd,
                         "rapid_data": rd
                     })
