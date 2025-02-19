@@ -1,2 +1,14 @@
 __pycache__/
 *.log
+mergedDump.json
+raw_merger_dumps/
+
+# Generated data files
+mergedDump.json
+raw_merger_dumps/
+*.log
+
+# Generated data files
+mergedDump.json
+raw_merger_dumps/
+*.log
