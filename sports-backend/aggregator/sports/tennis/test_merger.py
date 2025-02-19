@@ -1,32 +1,23 @@
+import json
+import os
 import asyncio
 import logging
-
-# Import your existing classes
+from datetime import datetime
 from aggregator.sports.tennis.betsapi_prematch import BetsapiPrematch
 from aggregator.sports.tennis.rapid_tennis_fetcher import RapidInplayOddsFetcher
 from aggregator.sports.tennis.tennis_merger import TennisMerger
 
-# -------------------------------------------------------------------------
+# Directory to store raw merger dumps
+RAW_DUMP_DIR = "raw_merger_dumps"
+
 # Configure Logging
-# -------------------------------------------------------------------------
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s %(levelname)s: %(message)s'
 )
 logger = logging.getLogger(__name__)
 
-# -------------------------------------------------------------------------
-# Main Async Test Function
-# -------------------------------------------------------------------------
 async def main():
-    """
-    1) Fetch live in-play + prematch data from BetsAPI.
-    2) Fetch live in-play + odds data from RapidAPI.
-    3) Transform BetsAPI results into a format TennisMerger expects.
-    4) Merge the two sets with TennisMerger.
-    5) Print the results for inspection (logging).
-    """
-
     logger.info("=== Starting Live Tennis Merger Test ===")
 
     # 1) Instantiate your BetsAPI and RapidAPI fetchers
@@ -42,29 +33,13 @@ async def main():
     rapid_raw = await rapid_fetcher.get_tennis_data()
     logger.info(f"RapidAPI returned {len(rapid_raw)} records.\n")
 
-    # 3) Transform BetsAPI data into the structure TennisMerger expects
-    #    The TennisMerger wants a list of dicts like:
-    #    [
-    #      {
-    #        "players": {
-    #          "home": "Some Name",
-    #          "away": "Another Name"
-    #        },
-    #        "bet365_id": "123456789",
-    #        ...
-    #      },
-    #      ...
-    #    ]
-
+    # 3) Transform BetsAPI data
     bets_data_for_merger = []
     for item in bets_raw:
         inplay_event = item.get("inplay_event", {})
         bet365_id = item.get("bet365_id", "")
         prematch_data = item.get("raw_prematch_data", {})
 
-        # For example, in "inplay_event":
-        #   "home": {"name": "Novak Djokovic"},
-        #   "away": {"name": "Matteo Berrettini"},
         home_player = inplay_event.get("home", {}).get("name", "")
         away_player = inplay_event.get("away", {}).get("name", "")
 
@@ -74,53 +49,44 @@ async def main():
                 "away": away_player
             },
             "bet365_id": bet365_id,
-            # Keep the raw data if you want to see more details
             "inplay_event": inplay_event,
             "raw_prematch_data": prematch_data
         })
 
-    # 4) Rapid data is already in a shape the updated TennisMerger understands:
-    #    [
-    #      {
-    #        "raw_event_data": {...}, # "team1","team2","eventId", or "FI", or "bet365_id"
-    #        "raw_odds_data": {...}
-    #      },
-    #      ...
-    #    ]
+    # 4) Use Rapid data as is
     rapid_data_for_merger = rapid_raw
 
     # 5) Merge
     merger = TennisMerger()
     merged_data = merger.merge(bets_data_for_merger, rapid_data_for_merger)
 
+    # 6) Save raw merged data
+    os.makedirs(RAW_DUMP_DIR, exist_ok=True)
+    filename = f"{RAW_DUMP_DIR}/merged_data_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+
+    with open(filename, "w", encoding="utf-8") as f:
+        json.dump(merged_data, f, indent=4)
+
+    logger.info(f"\n=== Raw merged data saved to {filename} ===")
+
+    # 7) Print statistics
     logger.info(f"\n=== Merged {len(merged_data)} Records ===")
     logger.info("Review the logs above for detailed match info (ID vs fuzzy).")
 
-    # If you want to see each record explicitly:
     for i, record in enumerate(merged_data, start=1):
         logger.info(f"\n--- Merged Record #{i} ---")
         logger.info(f"Home Player: {record.get('home_player')}")
         logger.info(f"Away Player: {record.get('away_player')}")
-        if record.get("betsapi_data"):
-            logger.info("BetsAPI Data: present")
-        else:
-            logger.info("BetsAPI Data: None")
+        logger.info(f"BetsAPI Data: {'present' if record.get('betsapi_data') else 'None'}")
+        logger.info(f"Rapid Data: {'present' if record.get('rapid_data') else 'None'}")
 
-        if record.get("rapid_data"):
-            logger.info("Rapid Data: present")
-        else:
-            logger.info("Rapid Data: None")
-
-    # Fuzzy fallback usage
-    logger.info(f"\nFuzzy fallback count: {merger.fuzzy_fallback_count}")
-
-    # Count successful matches (where both APIs had data)
+    # Print summary statistics
     successful_matches = sum(1 for record in merged_data if record.get("betsapi_data") and record.get("rapid_data"))
-    logger.info(f"Successfully matched events: {successful_matches}")
-    
-    # Count unmatched records
     unmatched_bets = sum(1 for record in merged_data if record.get("betsapi_data") and not record.get("rapid_data"))
     unmatched_rapid = sum(1 for record in merged_data if record.get("rapid_data") and not record.get("betsapi_data"))
+
+    logger.info(f"\nFuzzy fallback count: {merger.fuzzy_fallback_count}")
+    logger.info(f"Successfully matched events: {successful_matches}")
     logger.info(f"Unmatched events:")
     logger.info(f"  - BetsAPI only: {unmatched_bets}")
     logger.info(f"  - RapidAPI only: {unmatched_rapid}")
@@ -130,8 +96,5 @@ async def main():
 
     logger.info("=== Done testing with live data. ===\n")
 
-# -------------------------------------------------------------------------
-# Entry Point
-# -------------------------------------------------------------------------
 if __name__ == "__main__":
     asyncio.run(main())
