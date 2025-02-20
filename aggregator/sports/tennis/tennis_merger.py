@@ -359,7 +359,7 @@ class TennisMerger:
 
         return merged_records
 
-    def get_match_stats(self, merged_data: List[Dict[str, Any]]) -> Dict[str, int]:
+    def get_match_stats(self, merged_data: List[Dict[str, Any]]) -> Dict[str, Any]:
         """
         Calculate matching statistics from merged data.
         Returns:
@@ -368,17 +368,30 @@ class TennisMerger:
             - unmatched_bets: number of events only in BetsAPI
             - unmatched_rapid: number of events only in RapidAPI
             - fuzzy_matches: number of matches that used fuzzy matching
+            - unmatched_bets_events: list of unmatched BetsAPI events
+            - unmatched_rapid_events: list of unmatched RapidAPI events
         """
-        successful_matches = sum(1 for record in merged_data if record.get("betsapi_data") and record.get("rapid_data"))
-        unmatched_bets = sum(1 for record in merged_data if record.get("betsapi_data") and not record.get("rapid_data"))
-        unmatched_rapid = sum(1 for record in merged_data if record.get("rapid_data") and not record.get("betsapi_data"))
-        
-        return {
-            "successful_matches": successful_matches,
-            "unmatched_bets": unmatched_bets,
-            "unmatched_rapid": unmatched_rapid,
-            "fuzzy_matches": self.fuzzy_fallback_count
+        stats = {
+            'successful_matches': 0,
+            'unmatched_bets': 0,
+            'unmatched_rapid': 0,
+            'fuzzy_matches': 0,
+            'unmatched_bets_events': [],
+            'unmatched_rapid_events': []
         }
+
+        for record in merged_data:
+            if record.get('betsapi_data') and record.get('rapid_data'):
+                stats['successful_matches'] += 1
+            elif record.get('betsapi_data'):
+                stats['unmatched_bets'] += 1
+                stats['unmatched_bets_events'].append(record['betsapi_data'])
+            elif record.get('rapid_data'):
+                stats['unmatched_rapid'] += 1
+                stats['unmatched_rapid_events'].append(record['rapid_data'])
+
+        stats['fuzzy_matches'] = self.fuzzy_fallback_count
+        return stats
 
     def get_possible_ids(self, data: Dict[str, Any], fields: List[str]) -> set:
         """
