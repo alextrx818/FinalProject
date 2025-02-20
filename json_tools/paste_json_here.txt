@@ -1,0 +1,2 @@
+// PASTE YOUR JSON DATA HERE (SINGLE LINE):
+{"sport":"tennis","team1":"Player1","team2":"Player2","score":"6:4","sets":"6:4,0:0","serve":"team1","markets":[{"group":"Match Winner","na":"Player1","coef":1.5},{"group":"Match Winner","na":"Player2","coef":2.5}]}
