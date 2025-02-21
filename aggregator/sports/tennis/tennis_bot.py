@@ -100,6 +100,9 @@ class TennisBot:
         # RapidInplayOddsFetcher does NOT accept concurrency/retry parameters
         self.rapid_fetcher = RapidTennisFetcher()
 
+        # Initialize database connection
+        self.db = None
+
         # Initialize with EST timezone
         est = pytz.timezone('America/New_York')
         current_date = datetime.now(est)
@@ -178,154 +181,159 @@ class TennisBot:
         1) Fetch data from BetsAPI (prematch).
         2) Fetch data from RapidAPI (live).
         3) Merge data using tennis_merger (IDs, fuzzy name match, etc.).
-        4) (Optional) parse merged data and save to DB (commented out for now).
+        4) Save merged data to DB.
         5) Sleep any remaining time so we start the next cycle at roughly fetch_interval.
         
         This continues until an asyncio.CancelledError is raised
         (e.g., by our shutdown_handler upon receiving SIGINT/SIGTERM).
+
+        Note: Parser component for frontend display is planned but not yet implemented.
         """
         logger.info("TennisBot started. Press Ctrl+C to stop.")
+        
+        try:
+            # Initialize database connection
+            self.db = await tennis_database.TennisDatabase.create()
+            logger.info("Connected to tennis database")
 
-        while True:
-            start_time = time.time()
-            logger.info("Starting fetch cycle...")
+            while True:
+                start_time = time.time()
+                logger.info("Starting fetch cycle...")
 
-            try:
-                # Reset all counters at start
-                self.reset_cycle_counters()
-                self.reset_hourly_counters()
-                self.reset_daily_counters()
-                self.reset_monthly_counters()
+                try:
+                    # Reset all counters at start
+                    self.reset_cycle_counters()
+                    self.reset_hourly_counters()
+                    self.reset_daily_counters()
+                    self.reset_monthly_counters()
 
-                # 1) Fetch data from BetsAPI
-                logger.info("[BetsAPI] Beginning fetch...")
-                bets_start_time = time.time()
-                bets_data = await self.betsapi_fetcher.get_tennis_data()
-                bets_elapsed = time.time() - bets_start_time
-                self.current_cycle_calls['betsapi'] = len(bets_data)    # Track current cycle
-                self.hourly_total_calls['betsapi'] += len(bets_data)    # Track hourly total
-                self.daily_total_calls['betsapi'] += len(bets_data)     # Track daily total
-                self.monthly_total_calls['betsapi'] += len(bets_data)   # Track monthly total
-                logger.info(f"[BetsAPI] Fetch returned {len(bets_data)} records in {bets_elapsed:.2f} seconds.")
+                    # 1) Fetch data from BetsAPI
+                    logger.info("[BetsAPI] Beginning fetch...")
+                    bets_start_time = time.time()
+                    bets_data = await self.betsapi_fetcher.get_tennis_data()
+                    bets_elapsed = time.time() - bets_start_time
+                    self.current_cycle_calls['betsapi'] = len(bets_data)    # Track current cycle
+                    self.hourly_total_calls['betsapi'] += len(bets_data)    # Track hourly total
+                    self.daily_total_calls['betsapi'] += len(bets_data)     # Track daily total
+                    self.monthly_total_calls['betsapi'] += len(bets_data)   # Track monthly total
+                    logger.info(f"[BetsAPI] Fetch returned {len(bets_data)} records in {bets_elapsed:.2f} seconds.")
 
-                # 2) Fetch data from Rapid Tennis
-                logger.info("[RapidAPI] Beginning fetch...")
-                rapid_start_time = time.time()
-                rapid_data = await self.rapid_fetcher.get_tennis_data()
-                rapid_elapsed = time.time() - rapid_start_time
-                self.current_cycle_calls['rapidapi'] = len(rapid_data)    # Track current cycle
-                self.hourly_total_calls['rapidapi'] += len(rapid_data)    # Track hourly total
-                self.daily_total_calls['rapidapi'] += len(rapid_data)     # Track daily total
-                self.monthly_total_calls['rapidapi'] += len(rapid_data)   # Track monthly total
-                logger.info(f"[RapidAPI] Fetch returned {len(rapid_data)} records in {rapid_elapsed:.2f} seconds.")
+                    # 2) Fetch data from Rapid Tennis
+                    logger.info("[RapidAPI] Beginning fetch...")
+                    rapid_start_time = time.time()
+                    rapid_data = await self.rapid_fetcher.get_tennis_data()
+                    rapid_elapsed = time.time() - rapid_start_time
+                    self.current_cycle_calls['rapidapi'] = len(rapid_data)    # Track current cycle
+                    self.hourly_total_calls['rapidapi'] += len(rapid_data)    # Track hourly total
+                    self.daily_total_calls['rapidapi'] += len(rapid_data)     # Track daily total
+                    self.monthly_total_calls['rapidapi'] += len(rapid_data)   # Track monthly total
+                    logger.info(f"[RapidAPI] Fetch returned {len(rapid_data)} records in {rapid_elapsed:.2f} seconds.")
 
-                # Save counters after updating
-                self.save_counters()
+                    # Save counters after updating
+                    self.save_counters()
 
-                # 3) Merge data (Merger comes first)
-                logger.info("Merging data...")
-                merge_start_time = time.time()
-                merger = tennis_merger.TennisMerger()
-                merged_data = merger.merge(bets_data, rapid_data)
-                merge_elapsed = time.time() - merge_start_time
-                stats = merger.get_match_stats(merged_data)
-                
-                # Calculate total processing time
-                total_elapsed = time.time() - start_time
-                
-                logger.info("\nAPI AND MATCH STATISTICS:")
-                logger.info("  Timing Information:")
-                logger.info(f"    BetsAPI fetch time: {bets_elapsed:.2f} seconds")
-                logger.info(f"    RapidAPI fetch time: {rapid_elapsed:.2f} seconds")
-                logger.info(f"    Merge time: {merge_elapsed:.2f} seconds")
-                logger.info(f"    Total cycle time: {total_elapsed:.2f} seconds")
-                logger.info("  API Calls:")
-                
-                # Print sample data from a matched event
-                if merged_data and len(merged_data) > 0:
-                    sample_event = merged_data[0]
-                    logger.info("\nSAMPLE MATCHED EVENT DATA:")
-                    logger.info("  BetsAPI Data:")
-                    logger.info(json.dumps(sample_event['bets_data'], indent=2))
-                    logger.info("\n  RapidAPI Data:")
-                    logger.info(json.dumps(sample_event['rapid_data'], indent=2))
-                
-                logger.info("    Current Cycle:")
-                logger.info(f"      BetsAPI calls: {self.current_cycle_calls['betsapi']}")
-                logger.info(f"      RapidAPI calls: {self.current_cycle_calls['rapidapi']}")
-                logger.info("    Hourly Totals (EST):")
-                logger.info(f"      BetsAPI calls: {self.hourly_total_calls['betsapi']}")
-                logger.info(f"      RapidAPI calls: {self.hourly_total_calls['rapidapi']}")
-                logger.info("    Daily Totals (EST):")
-                logger.info(f"      BetsAPI calls: {self.daily_total_calls['betsapi']}")
-                logger.info(f"      RapidAPI calls: {self.daily_total_calls['rapidapi']}")
-                logger.info("    Monthly Totals (EST):")
-                logger.info(f"      BetsAPI calls: {self.monthly_total_calls['betsapi']}")
-                logger.info(f"      RapidAPI calls: {self.monthly_total_calls['rapidapi']}")
-                logger.info("  Match Results:")
-                logger.info(f"    Total RapidAPI records: {len(rapid_data)}")
-                logger.info(f"    Total BetsAPI records: {len(bets_data)}")
-                logger.info(f"    ID matches found: {stats['successful_matches']}")
-                logger.info(f"    Fuzzy name matches found: {stats['fuzzy_matches']}")
-                logger.info(f"    Unmatched RapidAPI records: {stats['unmatched_rapid']}")
-                logger.info(f"    Unmatched BetsAPI records: {stats['unmatched_bets']}")
+                    # 3) Merge data (Merger comes first)
+                    logger.info("Merging data...")
+                    merge_start_time = time.time()
+                    merger = tennis_merger.TennisMerger()
+                    merged_data = merger.merge(bets_data, rapid_data)
+                    merge_elapsed = time.time() - merge_start_time
+                    stats = merger.get_match_stats(merged_data)
+                    
+                    # Calculate total processing time
+                    total_elapsed = time.time() - start_time
+                    
+                    logger.info("\nAPI AND MATCH STATISTICS:")
+                    logger.info("  Timing Information:")
+                    logger.info(f"    BetsAPI fetch time: {bets_elapsed:.2f} seconds")
+                    logger.info(f"    RapidAPI fetch time: {rapid_elapsed:.2f} seconds")
+                    logger.info(f"    Merge time: {merge_elapsed:.2f} seconds")
+                    logger.info(f"    Total cycle time: {total_elapsed:.2f} seconds")
+                    logger.info("  API Calls:")
+                    
+                    # Print sample data from a matched event
+                    if merged_data and len(merged_data) > 0:
+                        sample_event = merged_data[0]
+                        logger.info("\nSAMPLE MATCHED EVENT DATA:")
+                        logger.info("  BetsAPI Data:")
+                        logger.info(json.dumps(sample_event['betsapi_data'], indent=2))
+                        logger.info("\n  RapidAPI Data:")
+                        logger.info(json.dumps(sample_event['rapid_data'], indent=2))
+                    
+                    logger.info("    Current Cycle:")
+                    logger.info(f"      BetsAPI calls: {self.current_cycle_calls['betsapi']}")
+                    logger.info(f"      RapidAPI calls: {self.current_cycle_calls['rapidapi']}")
+                    logger.info("    Hourly Totals (EST):")
+                    logger.info(f"      BetsAPI calls: {self.hourly_total_calls['betsapi']}")
+                    logger.info(f"      RapidAPI calls: {self.hourly_total_calls['rapidapi']}")
+                    logger.info("    Daily Totals (EST):")
+                    logger.info(f"      BetsAPI calls: {self.daily_total_calls['betsapi']}")
+                    logger.info(f"      RapidAPI calls: {self.daily_total_calls['rapidapi']}")
+                    logger.info("    Monthly Totals (EST):")
+                    logger.info(f"      BetsAPI calls: {self.monthly_total_calls['betsapi']}")
+                    logger.info(f"      RapidAPI calls: {self.monthly_total_calls['rapidapi']}")
+                    logger.info("  Match Results:")
+                    logger.info(f"    Total RapidAPI records: {len(rapid_data)}")
+                    logger.info(f"    Total BetsAPI records: {len(bets_data)}")
+                    logger.info(f"    ID matches found: {stats['successful_matches']}")
+                    logger.info(f"    Fuzzy name matches found: {stats['fuzzy_matches']}")
+                    logger.info(f"    Unmatched RapidAPI records: {stats['unmatched_rapid']}")
+                    logger.info(f"    Unmatched BetsAPI records: {stats['unmatched_bets']}")
 
-                # Show unmatched events details (for debugging)
-                if stats['unmatched_rapid'] > 0:
-                    logger.info("\nUnmatched RapidAPI events:")
-                    for event in stats['unmatched_rapid_events']:
-                        home = event['raw_event_data'].get('home_player', 'Unknown')
-                        away = event['raw_event_data'].get('away_player', 'Unknown')
-                        logger.info(f"  {home} vs {away}")
+                    # Show unmatched events details (for debugging)
+                    if stats['unmatched_rapid'] > 0:
+                        logger.info("\nUnmatched RapidAPI events:")
+                        for event in stats['unmatched_rapid_events']:
+                            home = event['raw_event_data'].get('home_player', 'Unknown')
+                            away = event['raw_event_data'].get('away_player', 'Unknown')
+                            logger.info(f"  {home} vs {away}")
 
-                if stats['unmatched_bets'] > 0:
-                    logger.info("\nUnmatched BetsAPI events:")
-                    for event in stats['unmatched_bets_events']:
-                        names = merger.get_player_names_from_record(event)
-                        # Get all possible IDs
-                        top_bet365_id = event.get('bet365_id', 'Not found')
-                        inplay_id = event.get('inplay_event', {}).get('id', 'Not found')
-                        fi_id = event.get('FI', 'Not found')
-                        top_id = event.get('id', 'Not found')
-                        
-                        logger.info(f"  {names[0]} vs {names[1]}")
-                        logger.info(f"    - bet365_id: {top_bet365_id}")
-                        logger.info(f"    - inplay_event.id: {inplay_id}")
-                        logger.info(f"    - FI: {fi_id}")
-                        logger.info(f"    - id: {top_id}")
+                    if stats['unmatched_bets'] > 0:
+                        logger.info("\nUnmatched BetsAPI events:")
+                        for event in stats['unmatched_bets_events']:
+                            names = merger.get_player_names_from_record(event)
+                            # Get all possible IDs
+                            top_bet365_id = event.get('bet365_id', 'Not found')
+                            inplay_id = event.get('inplay_event', {}).get('id', 'Not found')
+                            fi_id = event.get('FI', 'Not found')
+                            top_id = event.get('id', 'Not found')
+                            
+                            logger.info(f"  {names[0]} vs {names[1]}")
+                            logger.info(f"    - bet365_id: {top_bet365_id}")
+                            logger.info(f"    - inplay_event.id: {inplay_id}")
+                            logger.info(f"    - FI: {fi_id}")
+                            logger.info(f"    - id: {top_id}")
 
-                # 4) Parse data (Parser after merging)
-                """
-                logger.info("Parsing merged data...")
-                parsed_data = tennis_parser.parse(merged_data)
-                logger.info(f"Parsed data size: {len(parsed_data)}")
-                """
+                    # 4) Store merged data in database
+                    logger.info("Storing merged data in database...")
+                    store_start_time = time.time()
+                    store_success = await self.db.store_merged_data(merged_data)
+                    store_elapsed = time.time() - store_start_time
+                    logger.info(f"Database storage {'successful' if store_success else 'failed'} in {store_elapsed:.2f} seconds")
 
-                # 5) Save to the database (if desired)
-                """
-                logger.info("Saving parsed data to database...")
-                tennis_database.save(parsed_data)
-                logger.info("Data successfully saved to the database.")
-                """
+                except asyncio.CancelledError:
+                    logger.warning("Fetch loop cancelled. Exiting gracefully.")
+                    # Save counters one last time before exiting
+                    self.save_counters()
+                    raise
 
-            except asyncio.CancelledError:
-                logger.warning("Fetch loop cancelled. Exiting gracefully.")
-                # Save counters one last time before exiting
-                self.save_counters()
-                break
+                except Exception as e:
+                    logger.error("Error in TennisBot run loop", exc_info=True)
+                    # Still try to save counters even if there was an error
+                    self.save_counters()
 
-            except Exception as e:
-                logger.error("Error in TennisBot run loop", exc_info=True)
-                # Still try to save counters even if there was an error
-                self.save_counters()
+                # Sleep until next fetch
+                elapsed = time.time() - start_time
+                wait_time = max(0, self.fetch_interval - elapsed)
+                logger.info(f"Fetch cycle complete. Sleeping for {wait_time:.2f} seconds.")
+                await asyncio.sleep(wait_time)
 
-            # Sleep until next fetch
-            elapsed = time.time() - start_time
-            wait_time = max(0, self.fetch_interval - elapsed)
-            logger.info(f"Fetch cycle complete. Sleeping for {wait_time:.2f} seconds.")
-            await asyncio.sleep(wait_time)
-
-        logger.info("TennisBot run loop has exited.")
+        except Exception as e:
+            logger.error("Fatal error in TennisBot", exc_info=True)
+        finally:
+            if self.db:
+                await self.db.close()
+            logger.info("TennisBot run loop has exited.")
 
 ###############################################################################
 # Main Entry Point
