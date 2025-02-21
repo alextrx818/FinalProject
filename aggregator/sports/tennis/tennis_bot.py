@@ -199,32 +199,57 @@ class TennisBot:
 
                 # 1) Fetch data from BetsAPI
                 logger.info("[BetsAPI] Beginning fetch...")
+                bets_start_time = time.time()
                 bets_data = await self.betsapi_fetcher.get_tennis_data()
+                bets_elapsed = time.time() - bets_start_time
                 self.current_cycle_calls['betsapi'] = len(bets_data)    # Track current cycle
                 self.hourly_total_calls['betsapi'] += len(bets_data)    # Track hourly total
                 self.daily_total_calls['betsapi'] += len(bets_data)     # Track daily total
                 self.monthly_total_calls['betsapi'] += len(bets_data)   # Track monthly total
-                logger.info(f"[BetsAPI] Fetch returned {len(bets_data)} records.")
+                logger.info(f"[BetsAPI] Fetch returned {len(bets_data)} records in {bets_elapsed:.2f} seconds.")
 
                 # 2) Fetch data from Rapid Tennis
                 logger.info("[RapidAPI] Beginning fetch...")
+                rapid_start_time = time.time()
                 rapid_data = await self.rapid_fetcher.get_tennis_data()
+                rapid_elapsed = time.time() - rapid_start_time
                 self.current_cycle_calls['rapidapi'] = len(rapid_data)    # Track current cycle
                 self.hourly_total_calls['rapidapi'] += len(rapid_data)    # Track hourly total
                 self.daily_total_calls['rapidapi'] += len(rapid_data)     # Track daily total
                 self.monthly_total_calls['rapidapi'] += len(rapid_data)   # Track monthly total
-                logger.info(f"[RapidAPI] Fetch returned {len(rapid_data)} records.")
+                logger.info(f"[RapidAPI] Fetch returned {len(rapid_data)} records in {rapid_elapsed:.2f} seconds.")
 
                 # Save counters after updating
                 self.save_counters()
 
                 # 3) Merge data (Merger comes first)
                 logger.info("Merging data...")
+                merge_start_time = time.time()
                 merger = tennis_merger.TennisMerger()
                 merged_data = merger.merge(bets_data, rapid_data)
+                merge_elapsed = time.time() - merge_start_time
                 stats = merger.get_match_stats(merged_data)
+                
+                # Calculate total processing time
+                total_elapsed = time.time() - start_time
+                
                 logger.info("\nAPI AND MATCH STATISTICS:")
+                logger.info("  Timing Information:")
+                logger.info(f"    BetsAPI fetch time: {bets_elapsed:.2f} seconds")
+                logger.info(f"    RapidAPI fetch time: {rapid_elapsed:.2f} seconds")
+                logger.info(f"    Merge time: {merge_elapsed:.2f} seconds")
+                logger.info(f"    Total cycle time: {total_elapsed:.2f} seconds")
                 logger.info("  API Calls:")
+                
+                # Print sample data from a matched event
+                if merged_data and len(merged_data) > 0:
+                    sample_event = merged_data[0]
+                    logger.info("\nSAMPLE MATCHED EVENT DATA:")
+                    logger.info("  BetsAPI Data:")
+                    logger.info(json.dumps(sample_event['bets_data'], indent=2))
+                    logger.info("\n  RapidAPI Data:")
+                    logger.info(json.dumps(sample_event['rapid_data'], indent=2))
+                
                 logger.info("    Current Cycle:")
                 logger.info(f"      BetsAPI calls: {self.current_cycle_calls['betsapi']}")
                 logger.info(f"      RapidAPI calls: {self.current_cycle_calls['rapidapi']}")
