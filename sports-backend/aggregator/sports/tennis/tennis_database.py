@@ -1,148 +1,207 @@
 """
-Tennis-specific database operations for storing and retrieving tennis match data.
-Extends the core DatabaseManager with tennis-focused functionality.
+Tennis-specific database operations for storing and retrieving tennis match data using asyncpg.
 """
 
+import json
 import logging
+import asyncpg
+import uuid  # For generating unique IDs
 from typing import Dict, List, Optional, Any
+from datetime import datetime
+import asyncio
 
 logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO)
+
+# Tennis Database Configuration
+# For production, consider using environment variables instead.
+TENNIS_DB_CONFIG = {
+    'database': 'tennis_db',
+    'user': 'amireslami',
+    'password': 'LIncoln95amir',
+    'host': 'localhost'
+}
+
+# SQL for creating tennis_matches table
+CREATE_TENNIS_MATCHES_TABLE = """
+CREATE TABLE IF NOT EXISTS tennis_matches (
+    match_id    VARCHAR(50) PRIMARY KEY,
+    raw_data    JSONB NOT NULL,
+    inserted_at TIMESTAMP DEFAULT NOW()
+);
+"""
+
+# Index for faster JSON queries
+CREATE_TENNIS_MATCHES_INDEX = """
+CREATE INDEX IF NOT EXISTS idx_tennis_matches_raw_data 
+ON tennis_matches USING gin (raw_data);
+"""
 
 class TennisDatabase:
     """
     Tennis-specific database operations.
-    Handles storage and retrieval of:
-    - Live match data from RapidAPI
-    - Prematch data from BetsAPI
-    - Combined and processed tennis odds
+    Handles storage and retrieval of tennis match data using asyncpg.
     """
 
-    def __init__(self):
-        # TODO: Initialize database connection
-        pass
+    def __init__(self, pool: asyncpg.Pool):
+        self.pool = pool
 
-    async def store_rapid_tennis_data(self, matches: List[Dict[str, Any]]) -> bool:
+    @classmethod
+    async def create(cls):
         """
-        Store live tennis match data from RapidAPI.
+        Asynchronously create a TennisDatabase instance with an asyncpg connection pool,
+        and initialize the required tables and indexes.
+        """
+        pool = await asyncpg.create_pool(**TENNIS_DB_CONFIG)
+        self = cls(pool)
+        async with pool.acquire() as conn:
+            await conn.execute(CREATE_TENNIS_MATCHES_TABLE)
+            await conn.execute(CREATE_TENNIS_MATCHES_INDEX)
+            logger.info("Tennis database tables initialized")
+        logger.info("Successfully connected to tennis database")
+        return self
+
+    async def store_match_data(self, match_id: str, raw_data: Dict[str, Any]) -> bool:
+        """
+        Store tennis match data in the tennis_matches table.
+        If no valid match_id is provided, generate a new unique internal ID.
         
         Args:
-            matches: List of match data from RapidInplayOddsFetcher
-                    Each match contains raw_event_data and raw_odds_data
+            match_id: Unique identifier for the match (can be empty or None)
+            raw_data: Raw match data to store as JSONB
         
         Returns:
             bool: True if storage was successful
         """
         try:
-            formatted_matches = []
-            for match in matches:
-                event_data = match.get('raw_event_data', {})
-                formatted_matches.append({
-                    'match_id': event_data.get('marketFI', ''),
-                    'event_name': event_data.get('eventName', ''),
-                    'status': 'Live',
-                    'odds': match.get('raw_odds_data', {})
-                })
-            
-            if formatted_matches:
-                # TODO: Implement database storage
-                logger.info(f"Would store {len(formatted_matches)} RapidAPI tennis matches")
-                return True
-            return False
-            
+            # Generate an internal UUID if match_id is not provided or empty
+            if not match_id:
+                match_id = str(uuid.uuid4())
+                logger.info(f"No match_id found. Generated internal ID: {match_id}")
+            async with self.pool.acquire() as conn:
+                await conn.execute(
+                    """
+                    INSERT INTO tennis_matches (match_id, raw_data)
+                    VALUES ($1, $2)
+                    ON CONFLICT (match_id) DO UPDATE 
+                    SET raw_data = EXCLUDED.raw_data,
+                        inserted_at = NOW()
+                    """,
+                    match_id, json.dumps(raw_data)
+                )
+            return True
         except Exception as e:
-            logger.error(f"Error storing RapidAPI tennis data: {e}")
+            logger.error(f"Failed to store match data: {e}")
             return False
 
-    async def store_betsapi_tennis_data(self, matches: List[Dict[str, Any]]) -> bool:
+    async def store_merged_data(self, merged_matches: List[Dict[str, Any]]) -> bool:
         """
-        Store tennis prematch data from BetsAPI.
+        Store merged tennis match data (as produced by tennis_merger.py) in the database.
+        The data is stored raw in the JSONB 'raw_data' column without any modifications.
+        If the merged record doesn't include a valid external ID, an internal one is generated.
         
         Args:
-            matches: List of match data from BetsapiPrematch
-                    Each match contains inplay_event, bet365_id, and raw_prematch_data
+            merged_matches: List of merged match dictionaries
         
         Returns:
-            bool: True if storage was successful
+            bool: True if all matches were stored successfully, False otherwise.
         """
         try:
-            formatted_matches = []
-            for match in matches:
-                event = match.get('inplay_event', {})
-                formatted_matches.append({
-                    'match_id': match.get('bet365_id', ''),
-                    'event_name': f"{event.get('home', {}).get('name', '')} vs {event.get('away', {}).get('name', '')}",
-                    'status': 'Prematch',
-                    'odds': match.get('raw_prematch_data', {})
-                })
-            
-            if formatted_matches:
-                # TODO: Implement database storage
-                logger.info(f"Would store {len(formatted_matches)} BetsAPI tennis matches")
-                return True
-            return False
-            
+            success = True
+            for match in merged_matches:
+                # Determine a match_id from the merged data.
+                # We assume that either the betsapi_data or rapid_data contains an "id" field.
+                match_id = None
+                if match.get("betsapi_data") and match["betsapi_data"].get("id"):
+                    match_id = match["betsapi_data"]["id"]
+                elif match.get("rapid_data") and match["rapid_data"].get("id"):
+                    match_id = match["rapid_data"]["id"]
+                
+                # If no external match_id is found, log a warning with player info and let store_match_data generate one.
+                if not match_id:
+                    player_info = f"{match.get('home_player', 'Unknown')} vs {match.get('away_player', 'Unknown')}"
+                    logger.warning("No valid external ID found for match (%s); an internal ID will be generated.", player_info)
+                    match_id = ""
+                    
+                if not await self.store_match_data(match_id, match):
+                    success = False
+            return success
         except Exception as e:
-            logger.error(f"Error storing BetsAPI tennis data: {e}")
+            logger.error(f"Error storing merged tennis data: {e}")
             return False
 
-    def get_live_matches(self) -> List[Dict[str, Any]]:
-        """Get all live tennis matches from the database"""
-        try:
-            # TODO: Implement database retrieval
-            return []
-        except Exception as e:
-            logger.error(f"Error retrieving live tennis matches: {e}")
-            return []
-
-    def get_match_by_id(self, match_id: str) -> Optional[Dict[str, Any]]:
+    async def get_match_data(self, match_id: str) -> Optional[Dict[str, Any]]:
         """
-        Get a specific tennis match by its ID.
+        Retrieve tennis match data by ID.
         
         Args:
-            match_id: The match ID (either RapidAPI marketFI or BetsAPI bet365_id)
-        
+            match_id: Match ID to retrieve
+            
         Returns:
-            Optional[Dict]: Match data if found, None if not found
+            Optional[Dict]: Match data if found, None otherwise
         """
         try:
-            # TODO: Implement database retrieval
-            return None
-            
+            async with self.pool.acquire() as conn:
+                row = await conn.fetchrow("SELECT raw_data FROM tennis_matches WHERE match_id = $1", match_id)
+                if row:
+                    return json.loads(row['raw_data'])
+                return None
         except Exception as e:
-            logger.error(f"Error retrieving tennis match {match_id}: {e}")
+            logger.error(f"Failed to retrieve match data: {e}")
             return None
 
-# Quick test of the database operations
+    async def close(self):
+        """Close the connection pool."""
+        await self.pool.close()
+
+
+# Quick test of the database operations (for merged data)
 if __name__ == "__main__":
-    import asyncio
-    from rapid_tennis_fetcher import RapidInplayOddsFetcher
-    from betsapi_prematch import BetsapiPrematch
+    async def test_merged_db():
+        """
+        Test database operations by storing and retrieving merged tennis match data.
+        This data comes from the merger (tennis_merger.py) and is stored raw.
+        """
+        try:
+            # Initialize database using asyncpg
+            db = await TennisDatabase.create()
+            logger.info("Database connection successful")
+            
+            # Example merged data from your merger (mock data)
+            merged_data = [
+                {
+                    "home_player": "Joe",
+                    "away_player": "Jim",
+                    "betsapi_data": {"id": "M001", "details": "Prematch info for Joe vs Jim"},
+                    "rapid_data": {"id": "M001", "odds": {"Joe": 1.5, "Jim": 2.5}, "inplay_stats": "Set1: 6-4, 3-6, 7-5"}
+                },
+                {
+                    "home_player": "Karen",
+                    "away_player": "Sue",
+                    "betsapi_data": {"id": "M002", "details": "Prematch info for Karen vs Sue"},
+                    "rapid_data": {"id": "M002", "odds": {"Karen": 1.8, "Sue": 2.2}, "inplay_stats": "Set1: 7-6, 4-6, 6-4"}
+                },
+                {
+                    "home_player": "Alice",
+                    "away_player": "Bob",
+                    # No external ID provided here. An internal ID will be generated.
+                    "betsapi_data": {},
+                    "rapid_data": {"odds": {"Alice": 2.0, "Bob": 1.8}, "inplay_stats": "Set1: 6-3, 6-4"}
+                }
+            ]
+            
+            # Store merged data
+            success = await db.store_merged_data(merged_data)
+            logger.info(f"Stored merged data. Success: {success}")
+            
+            # Retrieve one match to verify
+            retrieved = await db.get_match_data("M001")
+            logger.info(f"Retrieved match M001: {retrieved is not None}")
+            print("Retrieved data for M001:", retrieved)
+            
+            await db.close()
+            
+        except Exception as e:
+            logger.error(f"Test failed: {e}")
     
-    async def test_db():
-        db = TennisDatabase()
-        
-        # Test RapidAPI storage
-        rapid_fetcher = RapidInplayOddsFetcher()
-        rapid_matches = await rapid_fetcher.get_tennis_data()
-        if rapid_matches:
-            success = await db.store_rapid_tennis_data(rapid_matches)
-            print(f"Stored RapidAPI matches: {success}")
-        
-        # Test BetsAPI storage
-        bets_fetcher = BetsapiPrematch()
-        bets_matches = await bets_fetcher.get_tennis_data()
-        if bets_matches:
-            success = await db.store_betsapi_tennis_data(bets_matches)
-            print(f"Stored BetsAPI matches: {success}")
-        
-        # Test retrieval
-        live_matches = db.get_live_matches()
-        print(f"Retrieved {len(live_matches)} live matches")
-        
-        if live_matches:
-            # Test get by ID
-            match_id = live_matches[0]['match_id']
-            match = db.get_match_by_id(match_id)
-            print(f"Retrieved match by ID {match_id}: {bool(match)}")
-    
-    asyncio.run(test_db())
+    asyncio.run(test_merged_db())
