@@ -1,30 +1,51 @@
-"""
-This script dumps the already merged data from tennis_merger.py to a JSON file for analysis.
-"""
-
+import asyncio
 import json
 import logging
+from datetime import datetime
+import pytz
 
-# Configure logging
+from aggregator.sports.tennis.betsapi_prematch import BetsapiPrematch
+from aggregator.sports.tennis.rapid_tennis_fetcher import RapidInplayOddsFetcher
+from aggregator.sports.tennis.tennis_merger import TennisMerger
+
 logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
 
-def dump_merged_data():
-    try:
-        # Get the merged data from tennis_merger.py
-        # TODO: Need to get the merged data from the running bot
-        # How do we access the data that's already being merged?
-        
-        # Write the merged data to a JSON file
-        output_file = 'mergedDump.json'
-        with open(output_file, 'w', encoding='utf-8') as f:
-            json.dump(merged_data, f, indent=2, default=str)
+async def main():
+    """
+    1) Fetch data from BetsAPI (prematch) + RapidAPI (live).
+    2) Merge them via TennisMerger.
+    3) Write the final merged JSON to 'mergedDump.json'.
+    """
+    # 1. Create the same fetchers your main bot uses:
+    bets_fetcher = BetsapiPrematch()
+    rapid_fetcher = RapidInplayOddsFetcher()
 
-        logger.info(f'Merged data written to {output_file} successfully.')
+    # 2. Fetch data from each API:
+    bets_data = await bets_fetcher.get_tennis_data()
+    rapid_data = await rapid_fetcher.get_tennis_data()
+    logging.info(f"Fetched {len(bets_data)} from BetsAPI and {len(rapid_data)} from RapidAPI.")
 
-    except Exception as e:
-        logger.error(f'Error dumping merged data: {str(e)}')
-        raise
+    # 3. Merge using your aggregator (TennisMerger):
+    merger = TennisMerger()
+    merged_data = merger.merge(bets_data, rapid_data)
+    logging.info(f"Merged data size: {len(merged_data)}")
 
-if __name__ == '__main__':
-    dump_merged_data()
+    # Get current EST time
+    eastern = pytz.timezone('US/Eastern')
+    utc_now = datetime.now(pytz.UTC)
+    est_now = utc_now.astimezone(eastern)
+    timestamp = est_now.strftime("%Y-%m-%d %H:%M:%S %Z")
+
+    # 4. Write the final JSON to 'mergedDump.json' with timestamp
+    output_data = {
+        "timestamp": timestamp,
+        "data": merged_data
+    }
+    
+    with open('mergedDump.json', 'w', encoding='utf-8') as f:
+        json.dump(output_data, f, indent=2)
+
+    logging.info(f"Wrote merged data to mergedDump.json at {timestamp}")
+
+if __name__ == "__main__":
+    asyncio.run(main())
