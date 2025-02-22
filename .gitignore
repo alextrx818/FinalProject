@@ -22,3 +22,75 @@ var/
 *.log
 .vscode/
 .idea/
+
+# Node modules and npm
+node_modules/
+.npm/
+.node_repl_history
+*.tgz
+.yarn-integrity
+.env.local
+.env.*.local
+
+# Cache directories
+.cache/
+.windsurf-server/
+.psql_history
+
+# System files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# Python virtual environment
+venv/
+ENV/
+.env/
+.venv/
+
+# IDE specific files
+*.sublime-workspace
+*.sublime-project
+.vscode/
+.idea/
+*.iml
+.project
+.classpath
+.settings/
+
+# Logs and databases
+*.log
+*.sql
+*.sqlite
+*.db
+
+# Large media files
+*.mp4
+*.tiff
+*.avi
+*.flv
+*.mov
+*.wmv
+*.jar
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.swp
+*.swo
+.history/
+
+# SSH and security
+.ssh/
+*.pem
+*.key
+*.cert
+*.crt
