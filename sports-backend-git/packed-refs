@@ -1,0 +1,26 @@
+# pack-refs with: peeled fully-peeled sorted 
+b3fbf7f4b33166a71893f74f6515f783c1557d00 refs/heads/feature/alerts
+b3fbf7f4b33166a71893f74f6515f783c1557d00 refs/heads/feature/chat
+bae57c2cbc294bf93e9dcaad9a1e0a2ab2ac93e7 refs/heads/feature/directory-structure
+a7211a6a496389b5f80b7c9faab2d53f1b57adf6 refs/heads/feature/structured-backend
+5381ee7d722ebaf025378358b08291ef3d5374af refs/heads/feature/tennis-api-integration
+0498d7a38b3b5028585006d658982214fdce4a8c refs/heads/feature/tennis-apis-working
+a1647401e10794a73be1e0a8fcf8d8644a254c59 refs/heads/feature/tennis-dashboard
+c58272d762eb49bacc64de40da12653d44314cbe refs/heads/feature/tennis-data-apis
+a7211a6a496389b5f80b7c9faab2d53f1b57adf6 refs/heads/main
+5beabd09cf03d64de08de9283a1bd58354423630 refs/heads/tennis_merger_backup
+3c2f9baaffc566a30e097cfa647fabe99bc40943 refs/heads/tennis_merger_fixes
+55d140c4aca291d1ea0b57131e91ba9190ff9e28 refs/heads/working-dashboard
+3aaad17115b0611abf415d228f3f93d9d7883904 refs/tags/stable-tennis-v1.0
+^d9b0144fd917bf5d3b60d845bf607bfe83c3b643
+e170e43560a2f2adc2f3438476e8fdf76cf076f7 refs/tags/v0.1.0
+^55d140c4aca291d1ea0b57131e91ba9190ff9e28
+b3fbf7f4b33166a71893f74f6515f783c1557d00 refs/tags/v1.0-forever-working
+cabf73a837d9cdaf22b3722f0c6da8bc9863b107 refs/tags/v1.0-working-dashboard
+a1647401e10794a73be1e0a8fcf8d8644a254c59 refs/tags/v1.0-working-dashboard-2025-02-17
+a1647401e10794a73be1e0a8fcf8d8644a254c59 refs/tags/v1.0-working-tennis-apis
+a8d22b129f2f987a7f52c03b96f28d7ff0e8bc52 refs/tags/v1.0.0-tennis
+^d9b0144fd917bf5d3b60d845bf607bfe83c3b643
+ace2cb14673ec21b66a795c0192dac65c87eadae refs/tags/v1.0.0-tennis-merger
+^c0d7a822836319637a8924c70d90b9e6efc1cf56
+bae57c2cbc294bf93e9dcaad9a1e0a2ab2ac93e7 refs/tags/v1.1-directories-created

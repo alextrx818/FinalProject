@@ -720,3 +720,1092 @@ cd /root/sports-backend && git branch -v
 cd /root/sports-backend && git checkout -b tennis_merger_backup && git add . && git commit -m "Saving current state of tennis merger implementation" && git remote add origin git@github.com:alextrx818/FinalProject.git && git push -u origin tennis_merger_backup
 cd /root/sports-backend
 git status
+cd /root/sports-backend && pkill -f "python3 view_merged_data.py" || true
+cd /root
+cd /root/sports-backend && python3 -m json.tool mergedDump.json | less
+curl http://165.227.123.99:8080
+cd /root/sports-backend && pkill -f "python3 view_merged_data.py" || true
+echo "mergedDump.json" >> /root/sports-backend/.gitignore
+cd /root
+cd /root/sports-backend && git rm --cached mergedDump.json || true
+cd /root
+cd /root/sports-backend && PYTHONPATH=/root/sports-backend python3 -m aggregator.sports.tennis.test_merge_dump
+cd /root
+cd /root/sports-backend && PYTHONPATH=/root/sports-backend python3 -m aggregator.sports.tennis.test_merge_dump
+cd /root
+cd /root/sports-backend && head -n 5 mergedDump.json
+cd /root
+cd /root/sports-backend && echo "First run timestamp:" && head -n 2 mergedDump.json && PYTHONPATH=/root/sports-backend python3 -m aggregator.sports.tennis.test_merge_dump && echo "Second run timestamp:" && head -n 2 mergedDump.json
+cd /root
+cd /root/sports-backend && PYTHONPATH=/root/sports-backend python3 -m aggregator.sports.tennis.test_merge_dump
+cd /root
+cd /root/sports-backend && echo "Previous timestamp:" && head -n 2 mergedDump.json && PYTHONPATH=/root/sports-backend python3 -m aggregator.sports.tennis.test_merge_dump && echo "New timestamp:" && head -n 2 mergedDump.json
+cd /root
+cd /root/sports-backend && PYTHONPATH=/root/sports-backend python3 -m aggregator.sports.tennis.test_merge_dump && head -n 20 mergedDump.json
+cd /root
+cd /root/sports-backend && PYTHONPATH=/root/sports-backend python3 -m aggregator.sports.tennis.test_merge_dump && head -n 30 mergedDump.json
+cd /root
+cd /root/sports-backend && PYTHONPATH=/root/sports-backend python3 -m aggregator.sports.tennis.test_merge_dump && head -n 40 mergedDump.json
+cd /root
+cd /root/sports-backend && cat mergedDump.json | grep -A 50 '"FI": "170091742"'
+cd /root
+cd /root/sports-backend && cat mergedDump.json | grep -A 100 '"main": {' | grep -A 50 '170091742'
+cd /root
+cd /root/sports-backend && git status
+cd /root
+cd /root/sports-backend && git add . && git commit -m "Enhanced tennis merger with consistent player names across all data structures" && git push origin feature/tennis-merger-est-restore
+cd /root
+cd /root/sports-backend && git tag -a v1.0.0-tennis-merger-20250219 -m "Tennis merger with consistent player names across all data structures" && git push origin v1.0.0-tennis-merger-20250219
+cd /root
+cd /root/sports-backend && git status
+cd /root
+cd /root/sports-backend && git tag -a v1.0.0-tennis-merger-20250219-1751 -m "Tennis merger with consistent player names - final version" && git push origin v1.0.0-tennis-merger-20250219-1751
+cd /root
+cd /root/sports-backend && git tag -l
+cd /root
+cd /root/sports-backend/aggregator/sports/tennis && chmod +x dump_data.py
+cd /root
+cd /root/sports-backend && PYTHONPATH=/root/sports-backend python3 aggregator/sports/tennis/dump_data.py
+cd /root
+cd /root/sports-backend && PYTHONPATH=/root/sports-backend python3 aggregator/sports/tennis/dump_data.py
+cd /root
+cd /root/sports-backend && PYTHONPATH=/root/sports-backend python3 aggregator/sports/tennis/dump_data.py
+cd /root
+cd /root/sports-backend && PYTHONPATH=/root/sports-backend python3 aggregator/sports/tennis/dump_data.py
+cd /root
+cd /root/sports-backend && git status
+cd /root
+cd /root/sports-backend && git add aggregator/sports/tennis/dump_data.py && git commit -m "Added dump_data.py script for dumping merged tennis data with timestamps" && git push origin feature/tennis-merger-est-restore
+cd /root
+cd /root/sports-backend && git tag -a v1.0.0-tennis-merger-20250219-1844 -m "Added dump_data.py script for data analysis" && git push origin v1.0.0-tennis-merger-20250219-1844
+tail -n 1000 /root/sports-backend/aggregator/sports/tennis/betsapi_prematch.log | grep -A 20 "Raw event data"
+cd /root/sports-backend && source /root/venv/bin/activate && PYTHONPATH=/root/sports-backend python3 -c "from aggregator.sports.tennis.betsapi_prematch import BetsapiPrematch; import asyncio; fetcher = BetsapiPrematch(); async def test(): async with fetcher.get_session() as session: data = await fetcher.fetch_prematch_data(session); print('Sample events:', data[:2] if data else 'No data'); asyncio.run(test())"
+cd /root
+source /root/venv/bin/activate && python3 /root/view_betsapi_data.py
+tree /root/sports-backend/aggregator/sports/tennis
+cd /root/sports-backend && source /root/venv/bin/activate && PYTHONPATH=/root/sports-backend python3 -m aggregator.sports.tennis.test_merge_dump
+cd /root
+cd /root/sports-backend && source /root/venv/bin/activate && PYTHONPATH=/root/sports-backend python3 -m aggregator.sports.tennis.test_merge_dump
+cd /root
+cd /root/sports-backend && source /root/venv/bin/activate && PYTHONPATH=/root/sports-backend python3 -m aggregator.sports.tennis.test_merge_dump
+cd /root
+cd /root/sports-backend && source /root/venv/bin/activate && PYTHONPATH=/root/sports-backend python3 -m aggregator.sports.tennis.test_merge_dump
+cd /root
+cd /root/sports-backend && source /root/venv/bin/activate && PYTHONPATH=/root/sports-backend python3 -m aggregator.sports.tennis.test_merge_dump
+cd /root
+cd /root/sports-backend && source /root/venv/bin/activate && PYTHONPATH=/root/sports-backend python3 -m aggregator.sports.tennis.test_merge_dump
+cd /root
+cd /root/sports-backend && source /root/venv/bin/activate && PYTHONPATH=/root/sports-backend python3 -m aggregator.sports.tennis.test_merge_dump
+cd /root
+cd /root/sports-backend && source /root/venv/bin/activate && PYTHONPATH=/root/sports-backend python3 -m aggregator.sports.tennis.test_merge_dump
+cd /root
+cd /root/sports-backend && source /root/venv/bin/activate && PYTHONPATH=/root/sports-backend python3 -m aggregator.sports.tennis.test_merge_dump
+cd /root
+cd /root/sports-backend && source /root/venv/bin/activate && PYTHONPATH=/root/sports-backend python3 -m aggregator.sports.tennis.test_merge_dump
+cd /root
+cd /root/sports-backend && source /root/venv/bin/activate && PYTHONPATH=/root/sports-backend python3 -m aggregator.sports.tennis.test_merge_dump
+cd /root
+cd /root/sports-backend && source /root/venv/bin/activate && PYTHONPATH=/root/sports-backend python3 -m aggregator.sports.tennis.test_tennis_bot
+cd /root
+cd /root/sports-backend && source /root/venv/bin/activate && PYTHONPATH=/root/sports-backend python3 -m aggregator.sports.tennis.test_orchestrator
+cd /root
+ls -l /root/sports-backend/mergedDump.json
+cd /root/sports-backend && source /root/venv/bin/activate && PYTHONPATH=/root/sports-backend python3 -m aggregator.sports.tennis.test_orchestrator
+cd /root
+cd /root/sports-backend && source /root/venv/bin/activate && PYTHONPATH=/root/sports-backend python3 -m aggregator.sports.tennis.test_orchestrator
+cd /root
+ls -l /root/sports-backend/mergedDump.json
+cd /root/sports-backend && source /root/venv/bin/activate && PYTHONPATH=/root/sports-backend python3 -m aggregator.sports.tennis.test_orchestrator
+cd /root
+head -n 5 /root/sports-backend/mergedDump.json
+cd /root/sports-backend && source /root/venv/bin/activate && PYTHONPATH=/root/sports-backend python3 -m aggregator.sports.tennis.test_orchestrator
+cd /root
+cd /root/sports-backend && source /root/venv/bin/activate && PYTHONPATH=/root/sports-backend python3 -m aggregator.sports.tennis.test_orchestrator
+cd /root
+head -n 10 /root/sports-backend/mergedDump.json
+cd /root/sports-backend && source /root/venv/bin/activate && pip install pytz
+cd /root
+cd /root/sports-backend && source /root/venv/bin/activate && PYTHONPATH=/root/sports-backend python3 -m aggregator.sports.tennis.test_orchestrator
+cd /root
+head -n 5 /root/sports-backend/mergedDump.json
+cd /root/sports-backend && git status
+cd /root
+cd /root/sports-backend && git remote -v
+cd /root
+cd /root/sports-backend && git checkout -b feature/tennis-merger-update
+cd /root
+cd /root/sports-backend && git add aggregator/sports/tennis/test_orchestrator.py aggregator/sports/tennis/tennis_merger.py
+cd /root
+cd /root/sports-backend && git commit -m "Update tennis merger to prioritize RapidAPI player names and add EST timezone"
+cd /root
+cd /root/sports-backend && git push -u origin feature/tennis-merger-update
+cd /root
+ssh-keygen -t ed25519 -C "alextrx818@github" -f /root/.ssh/github_ed25519 -N ""
+cat /root/.ssh/github_ed25519.pub
+cd /root/sports-backend && git tag -a v1.0.0 -m "Tennis Merger with RapidAPI player names and EST timezone" && git push origin v1.0.0 && git push origin feature/tennis-merger-update
+cd /root
+cd /root/sports-backend && ssh -T git@github.com
+cd /root
+cd /root/sports-backend && git push origin main && git tag -a v1.0.0 -m "Tennis Merger with RapidAPI player names and EST timezone" && git push origin v1.0.0
+cd /root
+cd /root/sports-backend && git remote set-url origin https://github.com/alextrx818/FinalProject.git
+cd /root
+cd /root/sports-backend && git push origin main && git tag -a v1.0.0 -m "Tennis Merger with RapidAPI player names and EST timezone" && git push origin v1.0.0
+cd /root
+cd /root/sports-backend && git push -f origin main && git tag -a v1.0.0 -m "Tennis Merger with RapidAPI player names and EST timezone" && git push -f origin v1.0.0
+cd /root
+cd /root/sports-backend && git checkout -b feature/tennis-merger-est && git tag v1.0-working-dashboard && git push origin v1.0-working-dashboard
+cd /root
+cd /root/sports-backend && git tag -d v1.0-working-dashboard && git tag v1.0-working-dashboard && git push origin v1.0-working-dashboard
+cd /root
+cd /root/sports-backend && git push -f origin v1.0-working-dashboard
+cd /root
+cd /root/sports-backend && git add .
+cd /root
+cd /root/sports-backend && git commit -m "Update tennis merger with EST timezone"
+cd /root
+cd /root/sports-backend && git push
+cd /root
+cd /root/sports-backend && git push --set-upstream origin feature/tennis-merger-est
+cd /root
+cd /root/sports-backend && echo "mergedDump.json" >> .gitignore && echo "raw_merger_dumps/" >> .gitignore && git rm -r --cached mergedDump.json raw_merger_dumps/ && git commit -m "Remove large data files" && git push --set-upstream origin feature/tennis-merger-est
+cd /root
+cd /root/sports-backend && du -h mergedDump.json raw_merger_dumps/* test_merge_dump.py
+cd /root
+cd /root/sports-backend && find . -type f -size +500k -exec du -h {} \;
+cd /root
+cd /root/sports-backend && echo -e "\n# Generated data files\nmergedDump.json\nraw_merger_dumps/\n*.log" >> .gitignore && git rm -r --cached mergedDump.json raw_merger_dumps/ tennis_bot.log && git commit -m "Remove data files from git tracking" && git push --set-upstream origin feature/tennis-merger-est
+cd /root
+cd /root/sports-backend && git reset HEAD mergedDump.json raw_merger_dumps/ tennis_bot.log && echo -e "\n# Generated data files\nmergedDump.json\nraw_merger_dumps/\n*.log" >> .gitignore && git add .gitignore && git commit -m "Update gitignore to exclude data files" && git push --set-upstream origin feature/tennis-merger-est
+cd /root
+cd /root/sports-backend && git reset && git add aggregator/sports/tennis/test_orchestrator.py aggregator/sports/tennis/tennis_merger.py && git commit -m "Update tennis merger with EST timezone" && git push --set-upstream origin feature/tennis-merger-est
+cd /root
+cd /root/sports-backend && git checkout -b feature/tennis-merger-est-clean && git add aggregator/sports/tennis/test_orchestrator.py aggregator/sports/tennis/tennis_merger.py && git commit -m "Update tennis merger with EST timezone" && git push --set-upstream origin feature/tennis-merger-est-clean
+cd /root
+cd /root/sports-backend/aggregator/sports/tennis && git add test_orchestrator.py tennis_merger.py && git commit -m "Update tennis merger with EST timezone" && git push --set-upstream origin feature/tennis-merger-est-clean
+cd /root
+cd /root/sports-backend && git clean -fd && git add aggregator/sports/tennis/test_orchestrator.py aggregator/sports/tennis/tennis_merger.py && git commit -m "Update tennis merger with EST timezone" && git push --set-upstream origin feature/tennis-merger-est-clean
+cd /root
+cd /root/sports-backend && git add .gitignore aggregator/sports/tennis/test_orchestrator.py aggregator/sports/tennis/tennis_merger.py && git commit -m "Update tennis merger with EST timezone and improve .gitignore" && git push --set-upstream origin feature/tennis-merger-est-clean
+cd /root
+cd /root/sports-backend && git checkout -b feature/tennis-merger-est-v2 && git add .gitignore aggregator/sports/tennis/test_orchestrator.py aggregator/sports/tennis/tennis_merger.py && git commit -m "Update tennis merger with EST timezone and improve .gitignore" && git remote -v
+cd /root
+cd /root/sports-backend && git status -u .
+cd /root
+cd /root/sports-backend && git diff aggregator/sports/tennis/test_orchestrator.py
+cd /root
+cd /root/sports-backend && git log -n 3
+cd /root
+cd /root/sports-backend && git remote -v
+cd /root
+cd /root/sports-backend && git push --set-upstream origin feature/tennis-merger-est-v2
+cd /root
+cd /root/sports-backend && git rev-list --objects --all | git cat-file --batch-check='%(objecttype) %(objectname) %(objectsize) %(rest)' | sort -nr -k3 | head -n 10
+cd /root
+cd /root/sports-backend && git reset --hard HEAD && git clean -fd
+cd /root
+cd /root && curl -Lo bfg.jar https://repo1.maven.org/maven2/com/madgag/bfg/1.14.0/bfg-1.14.0.jar
+cd /root && java -jar bfg.jar --strip-blobs-bigger-than 10M sports-backend/.git
+apt-get update && apt-get install -y default-jre
+cd /root && java -jar bfg.jar --strip-blobs-bigger-than 10M sports-backend/.git
+cd /root && rm -rf sports-backend && git clone --mirror https://github.com/alextrx818/FinalProject.git sports-backend.git
+cd /root && java -jar bfg.jar --strip-blobs-bigger-than 10M sports-backend.git
+cd /root && rm -rf sports-backend && git clone https://github.com/alextrx818/FinalProject.git sports-backend
+cd /root/sports-backend && find . -type f -size +10M
+cd /root
+cd /root/sports-backend && git checkout -b feature/tennis-merger-est-v3 && git add .gitignore aggregator/sports/tennis/test_orchestrator.py aggregator/sports/tennis/tennis_merger.py && git commit -m "Update tennis merger with EST timezone and improve .gitignore" && git push --set-upstream origin feature/tennis-merger-est-v3
+cd /root
+cd /root/sports-backend && git add .gitignore aggregator/sports/tennis/test_orchestrator.py aggregator/sports/tennis/tennis_merger.py && git commit -m "Update tennis merger with EST timezone and improve .gitignore" && git push --set-upstream origin feature/tennis-merger-est-v3
+cd /root
+cd /root/sports-backend && ls -la
+cd /root
+cd /root/sports-backend/aggregator/sports/tennis && ls -la
+cd /root
+cd /root && ls -la sports-backend*/aggregator/sports/tennis/
+cd /root/sports-backend && git checkout -- .
+cd /root
+cd /root/sports-backend/aggregator/sports/tennis && ls -la
+cd /root
+cd /root/sports-backend && git branch
+cd /root
+cd /root/sports-backend && git checkout feature/tennis-merger-est && git status
+cd /root
+cd /root && ls -la
+cd /root && mv sports-backend sports-backend-new && mv sports-backend.git sports-backend-git && cd /root/sports-backend-new && git status
+cd /root
+cd /root/sports-backend-new/aggregator/sports/tennis && ls -la
+cd /root
+cd /root && ls -la
+cd /root && ls -la /root/sports-backend/aggregator/sports/tennis/
+cd /root && mv sports-backend-new sports-backend && ls -la /root/sports-backend/aggregator/sports/tennis/
+cd /root/sports-backend && git checkout feature/tennis-merger-est
+cd /root
+cd /root/sports-backend && git branch -a
+cd /root
+cd /root/sports-backend && git checkout tennis_merger_backup
+cd /root
+cd /root/sports-backend && rm .gitignore && git checkout origin/tennis_merger_backup && ls -la aggregator/sports/tennis/
+cd /root
+cd /root/sports-backend && git checkout -b feature/tennis-merger-est-restore && ls -la aggregator/sports/tennis/
+cd /root
+cd /root/sports-backend/aggregator/sports/tennis && python3 test_merger.py
+cd /root
+cd /root/sports-backend && PYTHONPATH=/root/sports-backend python3 aggregator/sports/tennis/test_merger.py
+cd /root
+cd /root/sports-backend && ls -la aggregator/sports/tennis/test_orchestrator.py
+cd /root
+cd /root/sports-backend && ls -la aggregator/sports/tennis/test*
+cd /root
+cd /root/sports-backend && PYTHONPATH=/root/sports-backend python3 aggregator/sports/tennis/test.py
+cd /root
+cd /root/sports-backend && PYTHONPATH=/root/sports-backend python3 aggregator/sports/tennis/test_orchestrator.py
+cd /root
+cd /root/sports-backend && PYTHONPATH=/root/sports-backend python3 aggregator/sports/tennis/test_orchestrator.py
+cd /root
+cd /root/sports-backend && PYTHONPATH=/root/sports-backend python3 aggregator/sports/tennis/tennis_bot.py
+cd /root
+cd /root/sports-backend && PYTHONPATH=/root/sports-backend python3 aggregator/sports/tennis/tennis_bot.py
+cd /root
+cd /root/sports-backend && PYTHONPATH=/root/sports-backend python3 aggregator/sports/tennis/test_merger.py
+cd /root
+cd /root/sports-backend && PYTHONPATH=/root/sports-backend python3 aggregator/sports/tennis/test_merger.py
+cd /root
+cd /root/sports-backend && PYTHONPATH=/root/sports-backend python3 aggregator/sports/tennis/test_merger.py
+cd /root
+cd /root/sports-backend && PYTHONPATH=/root/sports-backend python3 aggregator/sports/tennis/test_orchestrator.py
+cd /root
+cd /root/sports-backend && PYTHONPATH=/root/sports-backend python3 aggregator/sports/tennis/test_orchestrator.py
+cd /root
+cd /root/sports-backend && PYTHONPATH=/root/sports-backend python3 aggregator/sports/tennis/test_orchestrator.py
+cd /root
+head -n 50 mergedDump.json
+cd /root/sports-backend && head -n 50 mergedDump.json
+cd /root
+cd /root/sports-backend && cat mergedDump.json
+cd /root
+cd /root/sports-backend && pip install flask && python3 view_merged_data.py
+cd /root
+cd /root/sports-backend && python3 view_merged_data.py
+cd /root
+cd /root/sports-backend && python3 view_merged_data.py
+/bin/python3 /root/.windsurf-server/extensions/ms-python.python-2025.0.0-universal/python_files/printEnvVariablesToFile.py /root/.windsurf-server/extensions/ms-python.python-2025.0.0-universal/python_files/deactivate/bash/envVars.txt
+cd /root/sports-backend && python3 -m aggregator.sports.tennis.tennis_bot
+cd /root
+pip install aiohttp rapidfuzz
+apt-get update && apt-get install -y python3-venv
+python3 -m venv venv && source venv/bin/activate && pip install -r /root/sports-backend/requirements.txt aiohttp rapidfuzz
+source venv/bin/activate && cd /root/sports-backend && PYTHONPATH=/root/sports-backend python3 -m aggregator.sports.tennis.tennis_bot
+python3 -m aggregator.sports.tennis.dump_data
+python3 -m aggregator.sports.tennis.test_merge_dump
+pip install pytz
+apt-get update && apt-get install -y python3-pytz
+ls -la /root/sports-backend/
+source venv/bin/activate && python3 -m aggregator.sports.tennis.test_merge_dump
+source venv/bin/activate && pip install pytz
+source venv/bin/activate && python3 -m aggregator.sports.tennis.test_merge_dump
+source venv/bin/activate && cat mergedDump.json | python3 -m json.tool | head -n 100
+source venv/bin/activate && cat mergedDump.json | python3 -m json.tool | grep -A 5 "rapid_data" | head -n 20
+source venv/bin/activate && cat mergedDump.json | python3 -m json.tool | sed -n '/Francisco Comesana/,/Nicolas Jarry/p' | grep "name" | sort | uniq
+source venv/bin/activate && cat mergedDump.json | python3 -m json.tool | awk '/Francisco Comesana/{p=1}/"rapid_data"/{if(p)p=0}/name":/{ if(p) print}' | sort | uniq
+source venv/bin/activate && cat mergedDump.json | python3 -m json.tool | awk '/Francisco Comesana/{p=1}/rapid_data/{p=0} /raw_prematch_data/{print "PREMATCH:"; pm=1} /inplay_event/{print "LIVE:"; pm=0} /"name":/{if(p) print (pm?"PREMATCH: ":"LIVE: ") $0}' | sort | uniq
+source venv/bin/activate && cat mergedDump.json | python3 -m json.tool | grep -A 1 '"id": ".*"' | grep 'name' | sort | uniq
+source venv/bin/activate && cat mergedDump.json | python3 -m json.tool | grep -A 1 'sp.*:.*{' | grep 'name' | sort | uniq
+source venv/bin/activate && cat mergedDump.json | python3 -m json.tool | sed -n '/Francisco Comesana/,/rapid_data/p' | grep '"name"' | sort | uniq
+source venv/bin/activate && cat mergedDump.json | python3 -m json.tool | sed -n '/Francisco Comesana/,/rapid_data/p' | grep -A 10 "inplay_event"
+source venv/bin/activate && cat mergedDump.json | python3 -m json.tool | sed -n '/Francisco Comesana/,/rapid_data/p' | grep -A 20 "rapid_data"
+source venv/bin/activate && cat mergedDump.json | python3 -m json.tool | sed -n '/Francisco Comesana/,/rapid_data/p' | grep -B2 -A2 "inplay"
+source venv/bin/activate && cat mergedDump.json | python3 -m json.tool | sed -n '/Francisco Comesana/,/rapid_data/p' | grep -B2 -A2 "sp"
+source venv/bin/activate && cat mergedDump.json | python3 -m json.tool | sed -n '/Francisco Comesana/,/rapid_data/p' | grep -B1 -A3 "updated_at.*1739" | grep "name\|updated_at" | sort
+source venv/bin/activate && cat mergedDump.json | python3 -m json.tool | sed -n '/Francisco Comesana/,/rapid_data/p' | grep -B5 -A1 "updated_at.*173999" | grep "name"
+source venv/bin/activate && cat mergedDump.json | python3 -m json.tool | sed -n '/Francisco Comesana/,/rapid_data/p' | grep -A 5 "time_status.*1"
+source venv/bin/activate && cat mergedDump.json | python3 -m json.tool | sed -n '/Francisco Comesana/,/rapid_data/p' | grep -A 3 "sp.*{" | grep "name\|id"
+source venv/bin/activate && cat mergedDump.json | python3 -m json.tool | sed -n '/Francisco Comesana/,/rapid_data/p' | grep "FI"
+source venv/bin/activate && cat mergedDump.json | python3 -m json.tool | sed -n '/marketFI.*170108473/,/rapid_data/p' | grep "name"
+source venv/bin/activate && cat mergedDump.json | python3 -m json.tool | sed -n '/Francisco Comesana/,/Carol Zhao/p' | grep -B2 "name.*:"
+source venv/bin/activate && pip install google-auth-oauthlib google-auth google-api-python-client
+source venv/bin/activate && pip install pandas openpyxl
+source venv/bin/activate && python json_to_excel.py
+source venv/bin/activate && head -n 20 mergedDump.json
+source venv/bin/activate && python format_odds.py > tennis_odds.txt
+head -n 10 tennis_odds.txt
+source venv/bin/activate && python format_table.py
+head -n 10 tennis_odds_table.md
+source venv/bin/activate && python format_csv.py && cat tennis_odds.csv
+source venv/bin/activate && python format_csv.py && head -n 10 tennis_odds.csv
+source venv/bin/activate && python3 -c "import json; f = open('mergedDump.json'); data = json.load(f); print(json.dumps(data['data'][0]['betsapi_data']['odds'][0], indent=2))"
+source venv/bin/activate && python3 -c "import json; f = open('mergedDump.json'); data = json.load(f); print(json.dumps(list(data['data'][0].keys()), indent=2))"
+source venv/bin/activate && python format_csv.py && head -n 10 tennis_odds.csv
+source venv/bin/activate && python3 -c "import json; f = open('mergedDump.json'); data = json.load(f); print(json.dumps(data['data'][0]['rapid_data'].keys(), indent=2))"
+source venv/bin/activate && python3 -c "import json; f = open('mergedDump.json'); data = json.load(f); print(list(data['data'][0]['rapid_data'].keys()))"
+source venv/bin/activate && python format_csv.py && cat tennis_odds.csv
+cat temp_data.json | python format_csv.py && cat tennis_odds.csv
+pip install tabulate
+cat temp_data.json | python format_table.py
+pip install pandas openpyxl
+cat temp_data.json | python json_to_excel.py
+ls -l tennis_odds.xlsx
+python3 -c "import pandas as pd; print(pd.read_excel('tennis_odds.xlsx'))"
+mkdir -p ~/output
+rm json_to_table.py
+cat paste_json_here.txt | python json_to_table.py
+mkdir -p json_tools && mv json_to_table.py paste_json_here.txt json_tools/
+pip install deepdiff
+cd json_tools && cat paste_json_here.txt | python json_to_table.py
+cd /root/sports-backend
+cat json_tools/paste_json_here.txt | python json_tools/json_to_table.py
+cat json_tools/paste_json_here.txt | tr -d '\n' | python json_tools/json_to_table.py
+cat -A json_tools/paste_json_here.txt | head -n 1
+sed '1d' json_tools/paste_json_here.txt | python json_tools/json_to_table.py
+(sed '1d' json_tools/paste_json_here.txt; echo "1") | python json_tools/json_to_table.py
+cat json_tools/paste_json_here.txt | python3 -c "import sys, json; print(json.dumps(json.load(sys.stdin)))" | python json_tools/json_to_table.py
+echo '{"sport":"tennis","score":"1:0","sets":"6:4,0:0","serve":"team2","game":"0:0","liga":"ATP Rio De Janeiro","eventId":"6V170101074C13A_1_1","eventName":"Sebastian Baez - Mariano Navone","team1":"Sebastian Baez","team2":"Mariano Navone","marketFI":"170108501","evLink":"https://www.bet365.com/#/IP/EV151151151045C13","markets":[{"fi":"170108501","na":"Sebastian Baez","id":"161142517","it":"6VP170108501-0161142517_1_1","od":"8/13","or":"0","su":"0","zw":"170108501-161142517","group":"Set 2 Winner","coef":1.615}]}' > temp.json && cat temp.json | python json_tools/json_to_table.py
+(echo '{"sport":"tennis","score":"1:0","sets":"6:4,0:0","serve":"team2","game":"0:0","liga":"ATP Rio De Janeiro","eventId":"6V170101074C13A_1_1","eventName":"Sebastian Baez - Mariano Navone","team1":"Sebastian Baez","team2":"Mariano Navone","marketFI":"170108501","evLink":"https://www.bet365.com/#/IP/EV151151151045C13","markets":[{"fi":"170108501","na":"Sebastian Baez","id":"161142517","it":"6VP170108501-0161142517_1_1","od":"8/13","or":"0","su":"0","zw":"170108501-161142517","group":"Set 2 Winner","coef":1.615}]}'; echo "1") | python json_tools/json_to_table.py
+python3 -c "import json; print(json.dumps(json.loads('''$(cat json_tools/paste_json_here.txt | tail -n +2)''')))" > temp.json && (cat temp.json; echo "1") | python json_tools/json_to_table.py
+cd json_tools && python json_to_table.py
+cd /root/sports-backend
+cd json_tools && python json_to_table.py
+cd /root/sports-backend
+cd json_tools && python json_to_table.py
+cd /root/sports-backend
+git status
+git add json_tools/
+git commit -m "Update json_to_table.py to read from paste_json_here.txt file directly"
+git push origin feature/tennis-merger-est-restore
+git tag -a v1.0.0-json-tools -m "First stable version of JSON tools with file-based input"
+git push origin v1.0.0-json-tools
+PYTHONPATH=/root/sports-backend python -m aggregator.sports.tennis.test_orchestrator
+PYTHONPATH=/root/sports-backend python -i aggregator/sports/tennis/test_orchestrator.py
+PYTHONPATH=/root/sports-backend python -m aggregator.sports.tennis.tennis_bot
+python tennis_bot.py
+cd /root/sports-backend
+PYTHONPATH=/root/sports-backend python -m aggregator.sports.tennis.tennis_bot
+ps aux | grep python
+PYTHONPATH=/root/sports-backend python -m aggregator.sports.tennis.tennis_bot
+head -n 20 mergedDump.json
+PYTHONPATH=/root/sports-backend python -m aggregator.sports.tennis.test_merger
+ps aux | grep python
+kill 482364 611469 611873
+PYTHONPATH=/root/sports-backend python -m aggregator.sports.tennis.tennis_bot
+[200~sudo -u postgres psql
+~sudo -u postgres psql
+sudo -u postgres psql
+[200~CREATE DATABASE tennis_db;
+\c tennis_db
+~CREATE DATABASE tennis_db;
+\c tennis_db
+CREATE DATABASE tennis_db;
+\c tennis_db
+sudo -u postgres psql
+ALTER ROLE amireslami WITH PASSWORD 'LIncoln95amir';
+sudo -u postgres psql
+[200~psql --username=amireslami --dbname=tennis_db
+psql --username=amireslami --dbname=tennis_db
+/etc/postgresql/16/main/pg_hba.conf
+sudo nano /etc/postgresql/16/main/pg_hba.conf
+sudo systemctl reload postgresql
+psql --username=amireslami --dbname=tennis_db
+psql -V
+systemctl status postgresql
+psql -l
+sudo -u postgres psql -c "CREATE DATABASE tennis_db;"
+sudo -u postgres psql -d tennis_db -c "CREATE TABLE tennis_matches (match_id VARCHAR(50) PRIMARY KEY, raw_data JSONB NOT NULL, inserted_at TIMESTAMP DEFAULT NOW());"
+sudo -u postgres psql -d tennis_db -c "\d tennis_matches"
+sudo -u postgres psql -c "SHOW data_directory;"
+tree /root/sports-backend/aggregator/sports/tennis
+mkdir -p /root/sports-backend/aggregator/databases/tennis
+rm -rf /root/sports-backend/aggregator/databases
+tree /root/sports-backend/aggregator/sports/tennis
+PYTHONPATH=/root/sports-backend python3 -c "from aggregator.sports.tennis.tennis_database import TennisDatabase; db = TennisDatabase()"
+sudo -u postgres psql -c "CREATE USER amireslami WITH PASSWORD 'LIncoln95amir';"
+sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE tennis_db TO amireslami;"
+PYTHONPATH=/root/sports-backend python3 -c "from aggregator.sports.tennis.tennis_database import TennisDatabase; db = TennisDatabase()"
+sudo -u postgres psql -d tennis_db -c "GRANT ALL ON SCHEMA public TO amireslami;"
+PYTHONPATH=/root/sports-backend python3 -c "from aggregator.sports.tennis.tennis_database import TennisDatabase; db = TennisDatabase()"
+sudo -u postgres psql -c "SHOW hba_file;"
+sudo cat /etc/postgresql/16/main/pg_hba.conf
+sudo sed -i 's/scram-sha-256/md5/g' /etc/postgresql/16/main/pg_hba.conf && sudo systemctl restart postgresql
+PYTHONPATH=/root/sports-backend python3 -c "from aggregator.sports.tennis.tennis_database import TennisDatabase; db = TennisDatabase()"
+sudo -u postgres psql -c "ALTER USER amireslami WITH PASSWORD 'LIncoln95amir';"
+PYTHONPATH=/root/sports-backend python3 -c "from aggregator.sports.tennis.tennis_database import TennisDatabase; db = TennisDatabase()"
+sudo -u postgres createdb tennis_db
+PGPASSWORD='LIncoln95amir' psql -U amireslami -d tennis_db -h localhost
+source venv/bin/activate
+python /root/sports-backend/aggregator/sports/tennis/tennis_database.py
+root@ubuntu-s-4vcpu-16gb-amd-nyc3-01:~#
+PGPASSWORD='LIncoln95amir' psql -U amireslami -d tennis_db -h localhost
+cd /root/sports-backend && python -m aggregator.sports.tennis.tennis_bot
+cd /root
+cd /root/sports-backend && python3 -m aggregator.sports.tennis.tennis_bot
+which python3 && python3 -c "import sys; print(sys.path)"
+ls -la /root/sports-backend/venv/bin/activate 2>/dev/null || ls -la /root/venv/bin/activate 2>/dev/null || ls -la /root/.venv/bin/activate 2>/dev/null || echo "No venv found in common locations"
+cd /root
+source /root/sports-backend/venv/bin/activate && cd /root/sports-backend && python3 -m aggregator.sports.tennis.tennis_bot
+cd /root
+sudo service postgresql status
+source /root/sports-backend/venv/bin/activate && cd /root/sports-backend && python3 view_tennis_data.py
+cd /root
+pkill -f "python3 -m aggregator.sports.tennis.tennis_bot" && cd /root/sports-backend && source venv/bin/activate && python3 -m aggregator.sports.tennis.tennis_bot
+pkill -f "python3 view_tennis_data.py"
+git status
+git remote add origin git@github.com:alextrx818/FinalProject.git
+git add aggregator/sports/tennis/tennis_bot.py aggregator/sports/tennis/tennis_database.py aggregator/sports/tennis/tennis_merger.py requirements.txt
+git commit -m "Updated tennis database implementation with proper table creation and indexes"
+git push origin feature/tennis-merger-est-restore
+git status
+git add aggregator/sports/tennis/models.py
+git commit -m "Added tennis database models with table and index definitions"
+git push origin feature/tennis-merger-est-restore
+git status
+git log -n 2
+source venv/bin/activate && pip install fastapi uvicorn
+curl http://localhost:8000/merged_data
+cd /root
+source venv/bin/activate && cd /root/sports-backend && python3 server.py
+source venv/bin/activate && pip install fastapi uvicorn
+cd /root
+source venv/bin/activate && cd /root/sports-backend && PYTHONPATH=/root/sports-backend python3 server.py
+pip install fastapi "uvicorn[standard]" --break-system-packages
+cd /root
+cd /root/sports-backend && PYTHONPATH=/root/sports-backend python3 server.py
+cd /root
+pkill -f "python3 server.py" && cd /root/sports-backend && PYTHONPATH=/root/sports-backend python3 server.py
+pkill -f "python3 server.py" && source venv/bin/activate && python3 server.py
+source venv/bin/activate && python3 server.py
+cd /root/sports-frontend/sports-frontend && npm install axios
+cd /root
+cd /root/sports-frontend/sports-frontend && npm install axios --legacy-peer-deps
+cd /root
+cd /root/sports-frontend/sports-frontend && npm install && npm install axios
+cd /root/sports-backend
+pkill -f "python server.py" && python server.py
+cd /root/sports-frontend/sports-frontend
+npm install axios --save
+npm install axios --save --legacy-peer-deps
+cd /root/sports-backend
+python3 -m aggregator.sports.tennis.tennis_bot
+pip install pytz
+python3 -m venv venv && source venv/bin/activate && pip install pytz
+source venv/bin/activate && python3 -m aggregator.sports.tennis.tennis_bot
+cd /root/sports-backend && source venv/bin/activate && python3 -m aggregator.sports.tennis.tennis_bot
+cd /root
+pip install fastapi uvicorn
+cd /root/sports-backend
+python server.py
+pkill -f "python3 server.py" && python3 server.py
+cd /root/sports-frontend/sports-frontend
+npm run dev
+/bin/python3 /root/.windsurf-server/extensions/ms-python.python-2025.0.0-universal/python_files/printEnvVariablesToFile.py /root/.windsurf-server/extensions/ms-python.python-2025.0.0-universal/python_files/deactivate/bash/envVars.txt
+pkill -f tennis_bot.py
+cd /root/sports-backend && python -m aggregator.sports.tennis.tennis_bot
+pkill -f tennis_bot.py
+cd /root/sports-backend && python -m aggregator.sports.tennis.tennis_bot
+cd /root/sports-backend && python print_sample_data.py
+head -n 50 sample_tennis_data.json
+tail -n 50 sample_tennis_data.json
+cd /root/sports-backend && python print_sample_data.py
+head -n 50 merged_match_data.json
+tail -n 50 merged_match_data.json
+cd /root/sports-backend && python print_sample_data.py
+head -n 50 merged_matches_data.json
+tail -n 50 merged_matches_data.json
+cat merged_matches_data.json
+cd /root/sports-backend && python print_sample_data.py
+cat merged_matches_data.json
+cd /root/sports-backend && python print_sample_data.py
+cd /root/sports-backend && python -m aggregator.sports.tennis.tennis_database
+pip install asyncpg
+cd /root/sports-backend && python -m aggregator.sports.tennis.tennis_database
+psql -U amireslami -d tennis_db -c "\dt"
+cd /root/sports-backend && python -m aggregator.sports.tennis.tennis_database
+systemctl status postgresql
+psql -U postgres -l
+sudo -u postgres psql -l
+sudo -u postgres psql -d tennis_db -c "\dt"
+sudo -u postgres psql -d tennis_db -c "GRANT ALL PRIVILEGES ON TABLE tennis_matches TO amireslami;"
+cd /root/sports-backend && python -m aggregator.sports.tennis.tennis_database
+sudo -u postgres psql -d tennis_db -c "ALTER TABLE tennis_matches OWNER TO amireslami;"
+cd /root/sports-backend && python -m aggregator.sports.tennis.tennis_database
+cd /root/sports-backend && git status
+cd /root/sports-backend && git add aggregator/sports/tennis/tennis_bot.py aggregator/sports/tennis/tennis_database.py
+cd /root/sports-backend && git commit -m "Updated tennis database implementation with asyncpg and added merged data storage"
+cd /root/sports-backend && git push origin feature/tennis-merger-est-restore
+sudo apt update
+sudo apt upgrade -y
+sudo systemctl status pgadmin4
+sudo reboot
+cd /root/sports-backend && python -m aggregator.sports.tennis.tennis_bot
+uname -r
+sudo systemctl status postgresql
+sudo -u postgres psql
+sudo apt update
+sudo apt install pgadmin4
+curl https://www.pgadmin.org/static/packages_pgadmin_org.pub | sudo apt-key add
+sudo sh -c 'echo "deb https://ftp.postgresql.org/pub/pgadmin/pgadmin4/apt/ubuntu $(lsb_release -cs) pgadmin4" > /etc/apt/sources.list.d/pgadmin4.list'
+sudo apt update
+lsb_release -cs
+sudo sh -c 'echo "deb https://ftp.postgresql.org/pub/pgadmin/pgadmin4/apt/ubuntu focal pgadmin4" > /etc/apt/sources.list.d/pgadmin4.list'
+curl https://www.pgadmin.org/static/packages_pgadmin_org.pub | sudo apt-key add -
+curl -o /etc/apt/trusted.gpg.d/pgadmin.gpg https://www.pgadmin.org/static/packages_pgadmin_org.pub
+sudo apt update
+sudo rm /etc/apt/sources.list.d/pgadmin4.list
+sudo sh -c 'echo "deb https://ftp.postgresql.org/pub/pgadmin/pgadmin4/apt/ubuntu bionic pgadmin4" > /etc/apt/sources.list.d/pgadmin4.list'
+curl -o /etc/apt/trusted.gpg.d/pgadmin.gpg https://www.pgadmin.org/static/packages_pgadmin_org.pub
+sudo apt update
+curl https://www.pgadmin.org/static/packages_pgadmin_org.pub | sudo apt-key add -
+sudo rm /etc/apt/sources.list.d/pgadmin4.list
+sudo sh -c 'echo "deb https://ftp.postgresql.org/pub/pgadmin/pgadmin4/apt/ubuntu jammy pgadmin4" > /etc/apt/sources.list.d/pgadmin4.list'
+curl -o /etc/apt/trusted.gpg.d/pgadmin.gpg https://www.pgadmin.org/static/packages_pgadmin_org.pub
+sudo apt update
+sudo rm /etc/apt/sources.list.d/pgadmin4.list
+curl https://www.pgadmin.org/static/packages_pgadmin_org.pub | sudo apt-key add -
+sudo sh -c 'echo "deb https://ftp.postgresql.org/pub/pgadmin/pgadmin4/apt/ubuntu focal pgadmin4" > /etc/apt/sources.list.d/pgadmin4.list'
+sudo apt update
+sudo rm /etc/apt/sources.list.d/pgadmin4.list
+sudo sh -c 'echo "deb https://ftp.postgresql.org/pub/pgadmin/pgadmin4/apt/ubuntu focal-pgdg main" > /etc/apt/sources.list.d/pgadmin4.list'
+curl -o /etc/apt/trusted.gpg.d/pgadmin.gpg https://www.pgadmin.org/static/packages_pgadmin_org.pub
+sudo apt update
+sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt focal-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
+wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+sudo rm /etc/apt/trusted.gpg.d/pgadmin.gpg
+wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/pgadmin.gpg > /dev/null
+sudo apt update
+sudo rm /etc/apt/sources.list.d/pgadmin4.list
+sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt focal-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
+wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/pgdg.gpg > /dev/null
+sudo apt update
+sudo apt install pgadmin4
+deb https://ftp.postgresql.org/pub/pgadmin/pgadmin4/apt/ubuntu focal-pgdg InRelease
+sudo nano /etc/apt/sources.list.d/pgadmin4.list
+sudo apt update
+deb https://ftp.postgresql.org/pub/pgadmin/pgadmin4/apt/ubuntu focal pgadmin4 main
+ls /etc/apt/sources.list.d/
+sudo nano /etc/apt/sources.list.d/pgadmin4.list
+curl https://www.pgadmin.org/static/packages_pgadmin_org.pub | sudo apt-key add -
+sudo apt update
+sudo apt install libgmp3-dev libpq-dev
+sudo rm /etc/apt/sources.list.d/pgadmin4.list
+curl https://www.pgadmin.org/static/packages_pgadmin_org.pub | sudo apt-key add -
+echo "deb https://ftp.pgadmin.org/pub/pgadmin4/apt/ubuntu focal pgadmin4" | sudo tee /etc/apt/sources.list.d/pgadmin4.list
+sudo apt update
+date
+sudo apt-get install --reinstall ca-certificates
+sudo update-ca-certificates
+sudo nano /etc/apt/sources.list.d/pgadmin4.list
+sudo apt update
+sudo rm /etc/apt/sources.list.d/pgadmin4.list
+curl https://www.pgadmin.org/static/packages_pgadmin_org.pub | sudo apt-key add -
+echo "deb https://ftp.pgadmin.org/pub/pgadmin4/apt/ubuntu jammy pgadmin4" | sudo tee /etc/apt/sources.list.d/pgadmin4.list
+sudo apt update
+id username
+id your_actual_username
+whoami
+adduser newusername
+adduser amireslami
+usermod -aG sudo amireslami
+ufw app list
+ufw allow OpenSSH
+ufw enable
+ufw status
+ssh%20amireslami@165.227.123.99
+http://ssh%20amireslami@165.227.123.99/
+$ ssh amireslami@165.227.123.99
+ssh amireslami@165.227.123.99
+mkdir -p /root/CascadeProjects/flask_test
+sudo apt update
+sudo apt install nginx
+sudo command_to_run
+ssh amireslami@165.227.123.99
+cd /root/sports-backend && git checkout -b Created_Database
+cd /root/sports-backend && git status
+cd /root/sports-backend && git add aggregator/sports/tennis/tennis_bot.py aggregator/sports/tennis/tennis_database.py .gitignore
+cd /root/sports-backend && git commit -m "Database Implementation Complete: Added database storage functionality for tennis matches"
+cd /root/sports-backend && git tag -a v1.0.0-database -m "Database implementation milestone: Tennis match data storage complete"
+cd /root/sports-backend && git push origin Created_Database && git push origin v1.0.0-database
+cd /root/sports-backend && python3 -m aggregator.sports.tennis.tennis_bot
+pwd
+hostname -I
+ps aux | grep test_flask_app.py
+curl -I http://livesportsalerts.io:8000
+dig livesportsalerts.io
+ps aux | grep test_flask_app.py
+curl http://165.227.123.99:8000
+curl http://livesportsalerts.io:8000
+curl http://livesportsalerts.io
+sudo netstat -tulpn | grep :80
+curl -I http://livesportsalerts.io:8000
+curl -I http://livesportsalerts.io
+sudo ufw status
+ls -la /etc/nginx/sites-enabled/
+cat /etc/nginx/sites-available/your_domain
+cat /etc/nginx/sites-available/165.227.123.99
+cat /etc/nginx/sites-available/livesportsalerts.io
+sudo bash -c 'cat > /etc/nginx/sites-available/livesportsalerts.io << EOL
+server {
+    listen 80;
+    listen [::]:80;
+
+    server_name livesportsalerts.io www.livesportsalerts.io;
+        
+    location / {
+        proxy_pass http://127.0.0.1:8000;
+        proxy_set_header Host \$host;
+        proxy_set_header X-Real-IP \$remote_addr;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto \$scheme;
+    }
+}
+EOL'
+sudo ln -sf /etc/nginx/sites-available/livesportsalerts.io /etc/nginx/sites-enabled/
+sudo rm -f /etc/nginx/sites-enabled/165.227.123.99 /etc/nginx/sites-enabled/your_domain
+sudo nginx -t
+sudo systemctl restart nginx
+curl http://livesportsalerts.io
+certbot --version
+sudo apt update && sudo apt install -y certbot python3-certbot-nginx
+sudo certbot --nginx -d livesportsalerts.io -d www.livesportsalerts.io
+curl -I http://livesportsalerts.io
+curl -I https://livesportsalerts.io
+sudo netstat -tulpn | grep 'nginx\|:80\|:443'
+curl -fsS https://www.pgadmin.org/static/packages_pgadmin_org.pub | sudo gpg --dearmor -o /usr/share/keyrings/packages-pgadmin-org.gpg
+sudo sh -c 'echo "deb [signed-by=/usr/share/keyrings/packages-pgadmin-org.gpg] https://ftp.postgresql.org/pub/pgadmin/pgadmin4/apt/$(lsb_release -cs) pgadmin4 main" > /etc/apt/sources.list.d/pgadmin4.list'
+sudo apt update && sudo apt install -y pgadmin4-web
+sudo /usr/pgadmin4/bin/setup-web.sh
+y
+sudo bash -c 'cat > /etc/nginx/sites-available/pgadmin.livesportsalerts.io << EOL
+server {
+    listen 80;
+    listen [::]:80;
+    server_name pgadmin.livesportsalerts.io;
+
+    location / {
+        proxy_pass http://127.0.0.1:5050;
+        proxy_set_header X-Script-Name /pgadmin4;
+        proxy_set_header X-Scheme \$scheme;
+        proxy_set_header Host \$host;
+        proxy_redirect off;
+    }
+}
+EOL'
+sudo ln -sf /etc/nginx/sites-available/pgadmin.livesportsalerts.io /etc/nginx/sites-enabled/ && sudo nginx -t
+sudo bash -c 'cat > /etc/systemd/system/pgadmin4.service << EOL
+[Unit]
+Description=pgAdmin4 service
+After=network.target
+
+[Service]
+User=www-data
+Group=www-data
+Environment="PATH=/usr/pgadmin4/venv/bin:\$PATH"
+ExecStart=/usr/pgadmin4/venv/bin/gunicorn --bind 127.0.0.1:5050 --workers=1 --threads=25 --chdir /usr/pgadmin4/web/ pgAdmin4:app
+
+[Install]
+WantedBy=multi-user.target
+EOL'
+sudo apt install -y gunicorn && sudo systemctl daemon-reload && sudo systemctl enable pgadmin4 && sudo systemctl start pgadmin4
+sudo certbot --nginx -d pgadmin.livesportsalerts.io
+dig pgadmin.livesportsalerts.io
+sudo systemctl status pgadmin4
+dig pgadmin.livesportsalerts.io
+sudo certbot --nginx -d pgadmin.livesportsalerts.io
+sudo systemctl status pgadmin4
+sudo /usr/pgadmin4/bin/setup-web.sh --yes
+sudo bash -c 'cat > /etc/systemd/system/pgadmin4.service << EOL
+[Unit]
+Description=pgAdmin4 service
+After=network.target
+
+[Service]
+User=www-data
+Group=www-data
+Environment="PATH=/usr/local/bin:/usr/bin:/bin"
+ExecStart=/usr/local/bin/gunicorn --bind 127.0.0.1:5050 --workers=1 --threads=25 --chdir /usr/share/pgadmin4/web pgAdmin4:app
+
+[Install]
+WantedBy=multi-user.target
+EOL'
+sudo systemctl daemon-reload && sudo systemctl restart pgadmin4 && sudo systemctl status pgadmin4
+which gunicorn
+sudo apt install -y python3-gunicorn && which gunicorn
+ls -la /usr/share/pgadmin4/web/
+find / -name pgadmin4 2>/dev/null
+sudo apt remove -y pgadmin4-web && sudo pip3 install pgadmin4
+sudo apt install -y python3-venv && python3 -m venv /opt/pgadmin4 && source /opt/pgadmin4/bin/activate && pip install pgadmin4
+sudo bash -c 'cat > /etc/systemd/system/pgadmin4.service << EOL
+[Unit]
+Description=pgAdmin4 service
+After=network.target
+
+[Service]
+User=www-data
+Group=www-data
+Environment="PATH=/opt/pgadmin4/bin:/usr/local/bin:/usr/bin:/bin"
+ExecStart=/opt/pgadmin4/bin/gunicorn --bind 127.0.0.1:5050 --workers=1 --threads=25 pgAdmin4:app
+WorkingDirectory=/opt/pgadmin4/lib/python3.12/site-packages/pgadmin4
+
+[Install]
+WantedBy=multi-user.target
+EOL'
+sudo mkdir -p /var/lib/pgadmin && sudo chown -R www-data:www-data /var/lib/pgadmin && sudo -u www-data python3 /opt/pgadmin4/lib/python3.12/site-packages/pgadmin4/setup.py
+sudo mkdir -p /var/lib/pgadmin && sudo chown -R www-data:www-data /var/lib/pgadmin && sudo mkdir -p /var/log/pgadmin && sudo chown -R www-data:www-data /var/log/pgadmin && sudo -u www-data /opt/pgadmin4/bin/python3 -c "from pgadmin4.config import SQLITE_PATH; from pgadmin4.setup import db_upgrade; db_upgrade(SQLITE_PATH)"
+curl -fsS https://www.pgadmin.org/static/packages_pgadmin_org.pub | sudo gpg --dearmor -o /usr/share/keyrings/packages-pgadmin-org.gpg && sudo sh -c 'echo "deb [signed-by=/usr/share/keyrings/packages-pgadmin-org.gpg] https://ftp.postgresql.org/pub/pgadmin/pgadmin4/apt/$(lsb_release -cs) pgadmin4 main" > /etc/apt/sources.list.d/pgadmin4.list' && sudo apt update && sudo apt install -y pgadmin4-web
+sudo /usr/pgadmin4/bin/setup-web.sh --yes
+sudo systemctl stop apache2 && sudo systemctl disable apache2
+sudo bash -c 'cat > /etc/systemd/system/pgadmin4.service << EOL
+[Unit]
+Description=pgAdmin4 service
+After=network.target
+
+[Service]
+User=www-data
+Group=www-data
+Environment="PATH=/usr/local/bin:/usr/bin:/bin"
+ExecStart=/usr/bin/python3 /usr/pgadmin4/web/pgAdmin4.py
+WorkingDirectory=/usr/pgadmin4/web
+
+[Install]
+WantedBy=multi-user.target
+EOL'
+sudo systemctl daemon-reload && sudo systemctl enable pgadmin4 && sudo systemctl start pgadmin4 && sudo systemctl status pgadmin4 && sudo nginx -t && sudo systemctl reload nginx
+sudo netstat -tlpn | grep 5050
+sudo journalctl -u pgadmin4 -n 50
+sudo apt install -y python3-flask-socketio python3-flask python3-werkzeug python3-sqlalchemy python3-flask-sqlalchemy python3-flask-migrate && sudo -H pip3 install flask-socketio
+sudo bash -c 'cat > /etc/pgadmin4/config_system.py << EOL
+import os
+
+DATA_DIR = os.path.realpath(os.path.expanduser(u"/var/lib/pgadmin"))
+LOG_FILE = os.path.join(DATA_DIR, "pgadmin4.log")
+SQLITE_PATH = os.path.join(DATA_DIR, "pgadmin4.db")
+SESSION_DB_PATH = os.path.join(DATA_DIR, "sessions")
+STORAGE_DIR = os.path.join(DATA_DIR, "storage")
+SERVER_MODE = True
+EOL'
+sudo apt remove -y --purge pgadmin4* && sudo rm -rf /var/lib/pgadmin /var/log/pgadmin /etc/pgadmin4 /usr/pgadmin4 && sudo apt update && sudo apt install -y postgresql-16 pgadmin4-web
+sudo docker pull dpage/pgadmin4 && sudo docker run -d -p 5050:80 --name pgadmin4 -e "PGADMIN_DEFAULT_EMAIL=admin@admin.com" -e "PGADMIN_DEFAULT_PASSWORD=admin" dpage/pgadmin4
+curl -fsSL https://get.docker.com -o get-docker.sh && sudo sh get-docker.sh
+sudo docker pull dpage/pgadmin4 && sudo docker run -d -p 5050:80 --name pgadmin4 -e "PGADMIN_DEFAULT_EMAIL=admin@admin.com" -e "PGADMIN_DEFAULT_PASSWORD=admin" dpage/pgadmin4
+sudo systemctl stop pgadmin4 || true && sudo systemctl disable pgadmin4 || true && sudo nginx -t && sudo systemctl reload nginx && sudo docker ps | grep pgadmin4
+sudo docker stop pgadmin4 && sudo docker rm pgadmin4
+sudo mkdir -p /var/lib/pgadmin4/{sessions,storage} /var/log/pgadmin4 && sudo apt install -y libgmp3-dev libpq-dev python3-venv
+python3 -m venv /opt/pgadmin4 && source /opt/pgadmin4/bin/activate && pip install pgadmin4 gunicorn
+sudo mkdir -p /etc/pgadmin4 && sudo bash -c 'cat > /etc/pgadmin4/config_system.py << EOL
+import os
+
+DATA_DIR = os.path.realpath(os.path.expanduser(u"/var/lib/pgadmin4"))
+LOG_FILE = os.path.join(DATA_DIR, "pgadmin4.log")
+SQLITE_PATH = os.path.join(DATA_DIR, "pgadmin4.db")
+SESSION_DB_PATH = os.path.join(DATA_DIR, "sessions")
+STORAGE_DIR = os.path.join(DATA_DIR, "storage")
+SERVER_MODE = True
+EOL'
+sudo bash -c 'cat > /etc/systemd/system/pgadmin4.service << EOL
+[Unit]
+Description=pgAdmin4 service
+After=network.target
+
+[Service]
+User=www-data
+Group=www-data
+Environment="PATH=/opt/pgadmin4/bin:/usr/local/bin:/usr/bin:/bin"
+ExecStart=/opt/pgadmin4/bin/gunicorn --bind unix:/tmp/pgadmin4.sock --workers=1 --threads=25 pgAdmin4:app
+WorkingDirectory=/opt/pgadmin4/lib/python3.12/site-packages/pgadmin4
+
+[Install]
+WantedBy=multi-user.target
+EOL'
+sudo chown -R www-data:www-data /var/lib/pgadmin4 /var/log/pgadmin4 /opt/pgadmin4 && sudo chmod 775 /var/lib/pgadmin4 /var/log/pgadmin4
+sudo systemctl daemon-reload && sudo systemctl enable pgadmin4 && sudo systemctl start pgadmin4 && sudo systemctl status pgadmin4 && sudo nginx -t && sudo systemctl reload nginx
+cd /opt/pgadmin4/lib/python3.12/site-packages/pgadmin4 && sudo -u www-data /opt/pgadmin4/bin/python3 setup.py
+cd /root
+cd /opt/pgadmin4/lib/python3.12/site-packages/pgadmin4 && sudo -u www-data /opt/pgadmin4/bin/python3 setup.py --help
+cd /root
+cd /opt/pgadmin4/lib/python3.12/site-packages/pgadmin4 && sudo -u www-data /opt/pgadmin4/bin/python3 setup.py setup-db && sudo -u www-data /opt/pgadmin4/bin/python3 setup.py add-user --username admin@admin.com --password admin
+cd /root
+sudo mkdir -p /var/lib/pgadmin && sudo chown -R www-data:www-data /var/lib/pgadmin && cd /opt/pgadmin4/lib/python3.12/site-packages/pgadmin4 && sudo -u www-data /opt/pgadmin4/bin/python3 setup.py setup-db && sudo -u www-data /opt/pgadmin4/bin/python3 setup.py add-user --username admin@admin.com --password admin
+cd /root
+sudo mkdir -p /var/lib/pgadmin /var/log/pgadmin && sudo chown -R www-data:www-data /var/lib/pgadmin /var/log/pgadmin && cd /opt/pgadmin4/lib/python3.12/site-packages/pgadmin4 && sudo -u www-data /opt/pgadmin4/bin/python3 setup.py setup-db && sudo -u www-data /opt/pgadmin4/bin/python3 setup.py add-user --username admin@admin.com --password admin
+cd /root
+cd /opt/pgadmin4/lib/python3.12/site-packages/pgadmin4 && sudo -u www-data /opt/pgadmin4/bin/python3 setup.py add-user admin@admin.com admin
+cd /root
+cd /opt/pgadmin4/lib/python3.12/site-packages/pgadmin4 && sudo -u www-data /opt/pgadmin4/bin/python3 setup.py add-user amireslami@gmail.com admin123
+cd /root
+cd /opt/pgadmin4/lib/python3.12/site-packages/pgadmin4 && sudo -u www-data /opt/pgadmin4/bin/python3 setup.py update-user amireslami@gmail.com --role admin
+cd /root
+cd /opt/pgadmin4/lib/python3.12/site-packages/pgadmin4 && sudo -u www-data /opt/pgadmin4/bin/python3 setup.py update-user --help
+cd /root
+cd /opt/pgadmin4/lib/python3.12/site-packages/pgadmin4 && sudo -u www-data /opt/pgadmin4/bin/python3 setup.py update-user amireslami@gmail.com --admin --active
+cd /root
+sudo systemctl restart pgadmin4 && sudo systemctl status pgadmin4
+sudo ufw status
+sudo ufw allow 'Nginx Full' && sudo ufw allow ssh && sudo ufw status
+sudo adduser amireslami && sudo usermod -aG sudo amireslami
+sudo systemctl status nginx
+sudo tail -f /var/log/pgadmin/pgadmin4.log
+sudo -u postgres psql -c "SELECT datname, pg_size_pretty(pg_database_size(datname)) as size FROM pg_database;"
+chmod +x /root/db_maintenance.sh && sudo bash -c 'echo "0 0 * * 0 root /root/db_maintenance.sh > /var/log/db_maintenance.log 2>&1" > /etc/cron.d/db_maintenance'
+sudo -u postgres psql -c "ALTER SYSTEM SET maintenance_work_mem = '128MB';" && sudo -u postgres psql -c "ALTER SYSTEM SET autovacuum_vacuum_scale_factor = '0.1';" && sudo -u postgres psql -c "ALTER SYSTEM SET autovacuum_analyze_scale_factor = '0.05';" && sudo systemctl restart postgresql
+sudo -u postgres psql -d tennis_db -c "\dt"
+sudo -u postgres psql -c "\du"
+sudo -u postgres psql -c "ALTER USER postgres PASSWORD 'postgres123';"
+sudo -u postgres psql -c "ALTER USER postgres PASSWORD 'LIncoln95amir';"
+cd /root/sports-backend/aggregator/sports/tennis
+cd /root/sports-backend/aggregator/sports/tennis && python3 tennis_bot.py
+cd /root/sports-backend
+cd /root/sports-backend && python3 -m aggregator.sports.tennis.tennis_bot
+pip3 install aiohttp
+pip3 install asyncpg pytz
+cd /root/sports-backend && python3 -m aggregator.sports.tennis.tennis_bot
+pip3 install rapidfuzz
+cd /root/sports-backend && python3 -m aggregator.sports.tennis.tennis_bot
+ls -la /var/www/livesportsalerts.io/static/
+sudo mkdir -p /var/www/livesportsalerts.io/static/
+sudo mkdir -p /var/www/livesportsalerts.io/media/
+sudo chown -R www-data:www-data /var/www/livesportsalerts.io/static/
+sudo chown -R www-data:www-data /var/www/livesportsalerts.io/media/
+sudo chmod -R 755 /var/www/livesportsalerts.io/static/
+sudo chmod -R 755 /var/www/livesportsalerts.io/media/
+python3 test_flask_app.py
+/bin/python3 /root/.windsurf-server/extensions/ms-python.python-2025.0.0-universal/python_files/printEnvVariablesToFile.py /root/.windsurf-server/extensions/ms-python.python-2025.0.0-universal/python_files/deactivate/bash/envVars.txt
+lsof -i :8765
+pkill -9 python
+cat /etc/nginx/sites-enabled/*
+lsof -i :8000
+lsof -i :8765
+ls -l /var/www/html/
+cd /root/sports-frontend/sports-frontend
+cd /root/sports-frontend/sports-frontend && npm run build
+cd /root
+rm -rf /var/www/html/* && cp -r /root/sports-frontend/sports-frontend/dist/* /var/www/html/
+cat > /etc/nginx/sites-enabled/livesportsalerts << 'EOL'
+server {
+    server_name livesportsalerts.io www.livesportsalerts.io;
+        
+    root /var/www/html;
+    index index.html;
+
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+
+    location /ws {
+        proxy_pass http://127.0.0.1:8765;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    listen [::]:443 ssl ipv6only=on;
+    listen 443 ssl;
+    ssl_certificate /etc/letsencrypt/live/livesportsalerts.io/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/livesportsalerts.io/privkey.pem;
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+}
+
+server {
+    if ($host = www.livesportsalerts.io) {
+        return 301 https://$host$request_uri;
+    }
+
+    if ($host = livesportsalerts.io) {
+        return 301 https://$host$request_uri;
+    }
+
+    listen 80;
+    listen [::]:80;
+    server_name livesportsalerts.io www.livesportsalerts.io;
+    return 404;
+}
+EOL
+
+nginx -t && systemctl restart nginx
+mv /etc/nginx/sites-enabled/livesportsalerts.io /etc/nginx/sites-enabled/livesportsalerts.io.bak && cat > /etc/nginx/sites-enabled/livesportsalerts << 'EOL'
+server {
+    server_name livesportsalerts.io www.livesportsalerts.io;
+        
+    root /var/www/html;
+    index index.html;
+
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+
+    location /ws {
+        proxy_pass http://127.0.0.1:8765;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    listen [::]:443 ssl ipv6only=on;
+    listen 443 ssl;
+    ssl_certificate /etc/letsencrypt/live/livesportsalerts.io/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/livesportsalerts.io/privkey.pem;
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+}
+EOL
+
+nginx -t && systemctl restart nginx
+rm /etc/nginx/sites-enabled/* && cat > /etc/nginx/sites-enabled/livesportsalerts << 'EOL'
+server {
+    server_name livesportsalerts.io www.livesportsalerts.io;
+        
+    root /var/www/html;
+    index index.html;
+
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+
+    location /ws {
+        proxy_pass http://127.0.0.1:8765;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    listen [::]:443 ssl ipv6only=on;
+    listen 443 ssl;
+    ssl_certificate /etc/letsencrypt/live/livesportsalerts.io/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/livesportsalerts.io/privkey.pem;
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+}
+
+server {
+    listen 80;
+    listen [::]:80;
+    server_name livesportsalerts.io www.livesportsalerts.io;
+    return 301 https://$server_name$request_uri;
+}
+EOL
+
+nginx -t && systemctl restart nginx
+cd /root/sports-backend
+pkill -9 -f tennis_bot.py && cd /root/sports-backend && source venv/bin/activate && python -m aggregator.sports.tennis.tennis_bot
+cd /root
+ps aux | grep tennis_bot
+pkill -9 -f tennis_bot.py
+cd /root/sports-backend
+cd /root/sports-backend && source venv/bin/activate && python -m aggregator.sports.tennis.tennis_bot
+pkill -9 -f tennis_bot.py
+cd /root/sports-backend && source venv/bin/activate && python -m aggregator.sports.tennis.tennis_bot
+pkill -f tennis_bot.py
+cd /root/sports-backend && source venv/bin/activate && python -m aggregator.sports.tennis.tennis_bot
+pkill -f tennis_bot.py
+cd /root/sports-backend && source venv/bin/activate && python -m aggregator.sports.tennis.tennis_bot
+cd /root/sports-frontend/sports-frontend && npm run serve
+cd /root/sports-frontend/sports-frontend && npm run dev
+source venv/bin/activate && pip install websockets
+cd /root/sports-backend && source venv/bin/activate && python -m aggregator.sports.tennis.tennis_bot
+source venv/bin/activate && python3 -m aggregator.sports.tennis.tennis_bot
+cd /root
+lsof -i :8765
+cd /root/sports-backend
+pkill -9 python && cd /root/sports-backend && source venv/bin/activate && python -m aggregator.sports.tennis.tennis_bot
+cd /root
+lsof -i :8765
+cd /root/sports-frontend/sports-frontend
+cd /root/sports-frontend/sports-frontend && npm run build && rm -rf /var/www/html/* && cp -r dist/* /var/www/html/
+cd /root/sports-backend
+pkill -9 python && cd /root/sports-backend && source venv/bin/activate && python -m aggregator.sports.tennis.tennis_bot
+cd /root/sports-frontend/sports-frontend
+cd /root/sports-frontend/sports-frontend && npm run build && rm -rf /var/www/html/* && cp -r dist/* /var/www/html/
+cd /root/sports-backend
+pkill -9 python && cd /root/sports-backend && source venv/bin/activate && python -m aggregator.sports.tennis.tennis_bot
+pkill -f "python3 -m aggregator.sports.tennis.tennis_bot"
+less tennis_bot.log
+python -m aggregator.sports.tennis.tennis_bot
+python3 -m aggregator.sports.tennis.tennis_bot
+pip3 install aiohttp fastapi uvicorn
+python3 -m venv venv
+source venv/bin/activate && pip install -r requirements.txt aiohttp fastapi uvicorn
+source venv/bin/activate && python3 -m aggregator.sports.tennis.tennis_bot
+source venv/bin/activate && pip install asyncpg
+source venv/bin/activate && python3 -m aggregator.sports.tennis.tennis_bot
+source venv/bin/activate && python3 -m aggregator.sports.tennis.tennis_bot > tennis_bot.log 2>&1 &
+source venv/bin/activate && python3 -m aggregator.sports.tennis.tennis_bot | tee tennis_bot.log
+cd /root/sports-backend && source venv/bin/activate && python -m aggregator.sports.tennis.tennis_bot
+cd /root/sports-frontend/sports-frontend
+cd /root/sports-frontend/sports-frontend && npm run build && rm -rf /var/www/html/* && cp -r dist/* /var/www/html/
+cd /root/sports-backend
+pkill -9 python && cd /root/sports-backend && source venv/bin/activate && python -m aggregator.sports.tennis.tennis_bot
+cd /root/sports-frontend/sports-frontend && npm run build && rm -rf /var/www/html/* && cp -r dist/* /var/www/html/
+cd /root/sports-backend
+pkill -9 python && cd /root/sports-backend && source venv/bin/activate && python -m aggregator.sports.tennis.tennis_bot
+cd /root
+tail -n 50 /var/log/nginx/error.log
+cd /root/sports-backend
+pkill -9 python && cd /root/sports-backend && source venv/bin/activate && python -m aggregator.sports.tennis.tennis_bot
+cd /root/sports-backend && source venv/bin/activate && python -c "import asyncio; from websocket_server import main; asyncio.run(main())"
+cd /root
+lsof -i :8765
+ps aux | grep tennis_bot
+cd /root/sports-backend
+pkill -9 python && cd /root/sports-backend && source venv/bin/activate && python -m aggregator.sports.tennis.tennis_bot
+cd /root
+lsof -i :8765
+cd /root/sports-backend
+pkill -9 python && cd /root/sports-backend && source venv/bin/activate && python -m aggregator.sports.tennis.tennis_bot
+cat > /etc/nginx/sites-available/default << 'EOL'
+server {
+    listen 80;
+    listen [::]:80;
+    server_name livesportsalerts.io;
+    return 301 https://$server_name$request_uri;
+}
+
+server {
+    listen 443 ssl;
+    listen [::]:443 ssl;
+    server_name livesportsalerts.io;
+
+    ssl_certificate /etc/letsencrypt/live/livesportsalerts.io/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/livesportsalerts.io/privkey.pem;
+
+    location / {
+        root /var/www/html;
+        try_files $uri $uri/ /index.html;
+    }
+
+    location /ws {
+        proxy_pass http://localhost:8765;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+EOL
+
+nginx -t && systemctl reload nginx
+cd /root/sports-frontend/sports-frontend
+cd /root/sports-frontend/sports-frontend && npm run build && rm -rf /var/www/html/* && cp -r dist/* /var/www/html/
+cd /root/sports-backend
+pkill -9 python && cd /root/sports-backend && source venv/bin/activate && python -m aggregator.sports.tennis.tennis_bot
+cd /root
+cat /etc/nginx/sites-enabled/default
+ls -la /etc/nginx/conf.d/
+nginx -t && systemctl restart nginx
+find /etc/nginx -type f -exec grep -l "livesportsalerts.io" {} \;
+cat /etc/nginx/sites-enabled/livesportsalerts
+cd /root/sports-frontend/sports-frontend && npm run build && cp -r dist/* /var/www/html/
+cd /root
+cd /root/sports-frontend/sports-frontend && npm run build && cp -r dist/* /var/www/html/
+cd /root/sports-backend
+pkill -9 python && cd /root/sports-backend && source venv/bin/activate && python -m aggregator.sports.tennis.tennis_bot
