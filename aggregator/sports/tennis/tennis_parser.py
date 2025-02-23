@@ -1,54 +1,50 @@
-"""
-Common parsing logic for tennis data from various APIs.
-"""
-
-from typing import Dict, List, Optional
+# tennis_parser.py
 import logging
+import json
+import asyncio
 
 logger = logging.getLogger(__name__)
 
 class TennisParser:
-    def parse_events(self, raw_events: List[Dict]) -> List[Dict]:
-        """Parse raw tennis events data into standardized format"""
-        parsed_events = []
-        
-        for event in raw_events:
-            try:
-                parsed_event = {
-                    "match_id": event.get("marketFI"),
-                    "event_name": event.get("eventName"),
-                    "status": "Live" if event.get("isLive") else "Upcoming",
-                    "score": event.get("score"),
-                    "players": {
-                        "home": event.get("homeTeam"),
-                        "away": event.get("awayTeam")
-                    },
-                    "tournament": event.get("tournament"),
-                    "start_time": event.get("startTime")
-                }
-                parsed_events.append(parsed_event)
-            except Exception as e:
-                logger.error(f"Error parsing event {event.get('marketFI')}: {str(e)}")
-                continue
-                
-        return parsed_events
+    """
+    Pure pass-through parser: It receives merged match data and forwards it to the bridge
+    without modifying the data.
+    """
+    def __init__(self, bridge):
+        self.bridge = bridge
 
-    def parse_odds(self, raw_odds: Dict) -> Dict:
-        """Parse raw tennis odds data into standardized format"""
-        parsed_odds = {}
+    async def process_data(self, merged_data):
+        """
+        Process the merged data with zero transformation.
+        - Log the number of records.
+        - Convert the raw merged data to a JSON string.
+        - Broadcast the JSON string through the bridge.
+        """
+        logger.info(f"Parser received {len(merged_data)} merged match records.")
         
-        try:
-            for market in raw_odds.get("markets", []):
-                market_name = market.get("marketName")
-                if not market_name:
-                    continue
-                    
-                parsed_odds[market_name] = {
-                    outcome.get("outcomeName"): outcome.get("price")
-                    for outcome in market.get("outcomes", [])
-                    if outcome.get("outcomeName") and outcome.get("price")
-                }
-        except Exception as e:
-            logger.error(f"Error parsing odds: {str(e)}")
+        # Transform the data for frontend
+        frontend_data = []
+        for match in merged_data:
+            bets_data = match.get('betsapi_data', {})
+            rapid_data = match.get('rapid_data', {}).get('raw_event_data', {})
             
-        return parsed_odds
+            # Debug: Print odds data structure
+            logger.info(f"Match: {match.get('home_player')} vs {match.get('away_player')}")
+            logger.info(f"BetsAPI data: {json.dumps(bets_data, indent=2)}")
+            logger.info(f"RapidAPI data: {json.dumps(rapid_data, indent=2)}")
+            
+            frontend_match = {
+                'home_player': match.get('home_player', 'Unknown'),
+                'away_player': match.get('away_player', 'Unknown'),
+                'status': rapid_data.get('status', bets_data.get('status', 'Unknown')),
+                'pre_match_odds': bets_data.get('odds', {}).get('1', 'N/A') if isinstance(bets_data.get('odds'), dict) else bets_data.get('odds', 'N/A'),
+                'live_odds': rapid_data.get('odds', {}).get('1', 'N/A') if isinstance(rapid_data.get('odds'), dict) else rapid_data.get('odds', 'N/A')
+            }
+            frontend_data.append(frontend_match)
+            
+        logger.info(f"Transformed data for frontend: {json.dumps(frontend_data, indent=2)}")
+        
+        # Convert data to JSON string and broadcast
+        data_json = json.dumps(frontend_data)
+        logger.info(f"Broadcasting data to all connected clients: {data_json}")
+        await self.bridge.broadcast(data_json)

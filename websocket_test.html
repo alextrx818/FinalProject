@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tennis WebSocket Test</title>
+    <style>
+        #messages {
+            width: 100%;
+            height: 400px;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+            font-family: monospace;
+        }
+        .message {
+            margin-bottom: 5px;
+            padding: 5px;
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+    <h2>Tennis WebSocket Test Client</h2>
+    <div id="status">Status: Disconnected</div>
+    <div id="messages"></div>
+
+    <script>
+        const messagesDiv = document.getElementById('messages');
+        const statusDiv = document.getElementById('status');
+        
+        function connect() {
+            const ws = new WebSocket('ws://localhost:8765');
+            
+            ws.onopen = function() {
+                statusDiv.textContent = 'Status: Connected';
+                addMessage('Connected to WebSocket server');
+            };
+            
+            ws.onmessage = function(event) {
+                try {
+                    const data = JSON.parse(event.data);
+                    addMessage('Received data:', data);
+                } catch (e) {
+                    addMessage('Received raw message:', event.data);
+                }
+            };
+            
+            ws.onclose = function() {
+                statusDiv.textContent = 'Status: Disconnected';
+                addMessage('Disconnected from server');
+                // Try to reconnect after 5 seconds
+                setTimeout(connect, 5000);
+            };
+            
+            ws.onerror = function(error) {
+                addMessage('WebSocket error:', error);
+            };
+        }
+        
+        function addMessage(prefix, data) {
+            const div = document.createElement('div');
+            div.className = 'message';
+            if (data) {
+                div.textContent = prefix + ' ' + JSON.stringify(data, null, 2);
+            } else {
+                div.textContent = prefix;
+            }
+            messagesDiv.insertBefore(div, messagesDiv.firstChild);
+        }
+        
+        // Start connection when page loads
+        connect();
+    </script>
+</body>
+</html>

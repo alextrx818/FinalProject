@@ -16,6 +16,12 @@ from aggregator.sports.tennis import tennis_parser
 from aggregator.sports.tennis import tennis_database
 
 ###############################################################################
+# NEW IMPORTS (minimal changes)
+###############################################################################
+from aggregator.sports.tennis.tennis_parser import TennisParser
+from aggregator.sports.tennis.tennis_bridge import TennisBridge
+
+###############################################################################
 # Configuration via Environment Variables or defaults
 ###############################################################################
 DEFAULT_CONCURRENCY = int(os.getenv("TENNIS_BOT_CONCURRENCY", "5"))  # For BetsAPI only
@@ -69,7 +75,7 @@ class TennisBot:
     Orchestrates fetching data from:
       1) BetsAPI Prematch (with concurrency/retry logic)
       2) RapidInplayOddsFetcher (no concurrency/retry params)
-    Then merges first, parses second, and optionally saves to DB.
+    Then merges, stores to DB, parses, and bridges the data to the front end.
     Repeats every fetch_interval seconds.
     """
 
@@ -181,13 +187,12 @@ class TennisBot:
         1) Fetch data from BetsAPI (prematch).
         2) Fetch data from RapidAPI (live).
         3) Merge data using tennis_merger (IDs, fuzzy name match, etc.).
-        4) Save merged data to DB.
-        5) Sleep any remaining time so we start the next cycle at roughly fetch_interval.
+        4) Store merged data to the database.
+        5) Pass the merged data through the parser to the bridge for front end display.
+        6) Sleep any remaining time so we start the next cycle at roughly fetch_interval.
         
         This continues until an asyncio.CancelledError is raised
         (e.g., by our shutdown_handler upon receiving SIGINT/SIGTERM).
-
-        Note: Parser component for frontend display is planned but not yet implemented.
         """
         logger.info("TennisBot started. Press Ctrl+C to stop.")
         
@@ -212,21 +217,21 @@ class TennisBot:
                     bets_start_time = time.time()
                     bets_data = await self.betsapi_fetcher.get_tennis_data()
                     bets_elapsed = time.time() - bets_start_time
-                    self.current_cycle_calls['betsapi'] = len(bets_data)    # Track current cycle
-                    self.hourly_total_calls['betsapi'] += len(bets_data)    # Track hourly total
-                    self.daily_total_calls['betsapi'] += len(bets_data)     # Track daily total
-                    self.monthly_total_calls['betsapi'] += len(bets_data)   # Track monthly total
+                    self.current_cycle_calls['betsapi'] = len(bets_data)
+                    self.hourly_total_calls['betsapi'] += len(bets_data)
+                    self.daily_total_calls['betsapi'] += len(bets_data)
+                    self.monthly_total_calls['betsapi'] += len(bets_data)
                     logger.info(f"[BetsAPI] Fetch returned {len(bets_data)} records in {bets_elapsed:.2f} seconds.")
 
-                    # 2) Fetch data from Rapid Tennis
+                    # 2) Fetch data from RapidAPI
                     logger.info("[RapidAPI] Beginning fetch...")
                     rapid_start_time = time.time()
                     rapid_data = await self.rapid_fetcher.get_tennis_data()
                     rapid_elapsed = time.time() - rapid_start_time
-                    self.current_cycle_calls['rapidapi'] = len(rapid_data)    # Track current cycle
-                    self.hourly_total_calls['rapidapi'] += len(rapid_data)    # Track hourly total
-                    self.daily_total_calls['rapidapi'] += len(rapid_data)     # Track daily total
-                    self.monthly_total_calls['rapidapi'] += len(rapid_data)   # Track monthly total
+                    self.current_cycle_calls['rapidapi'] = len(rapid_data)
+                    self.hourly_total_calls['rapidapi'] += len(rapid_data)
+                    self.daily_total_calls['rapidapi'] += len(rapid_data)
+                    self.monthly_total_calls['rapidapi'] += len(rapid_data)
                     logger.info(f"[RapidAPI] Fetch returned {len(rapid_data)} records in {rapid_elapsed:.2f} seconds.")
 
                     # Save counters after updating
@@ -251,7 +256,6 @@ class TennisBot:
                     logger.info(f"    Total cycle time: {total_elapsed:.2f} seconds")
                     logger.info("  API Calls:")
                     
-                    # Print sample data from a matched event
                     if merged_data and len(merged_data) > 0:
                         sample_event = merged_data[0]
                         logger.info("\nSAMPLE MATCHED EVENT DATA:")
@@ -280,7 +284,6 @@ class TennisBot:
                     logger.info(f"    Unmatched RapidAPI records: {stats['unmatched_rapid']}")
                     logger.info(f"    Unmatched BetsAPI records: {stats['unmatched_bets']}")
 
-                    # Show unmatched events details (for debugging)
                     if stats['unmatched_rapid'] > 0:
                         logger.info("\nUnmatched RapidAPI events:")
                         for event in stats['unmatched_rapid_events']:
@@ -292,12 +295,10 @@ class TennisBot:
                         logger.info("\nUnmatched BetsAPI events:")
                         for event in stats['unmatched_bets_events']:
                             names = merger.get_player_names_from_record(event)
-                            # Get all possible IDs
                             top_bet365_id = event.get('bet365_id', 'Not found')
                             inplay_id = event.get('inplay_event', {}).get('id', 'Not found')
                             fi_id = event.get('FI', 'Not found')
                             top_id = event.get('id', 'Not found')
-                            
                             logger.info(f"  {names[0]} vs {names[1]}")
                             logger.info(f"    - bet365_id: {top_bet365_id}")
                             logger.info(f"    - inplay_event.id: {inplay_id}")
@@ -311,18 +312,21 @@ class TennisBot:
                     store_elapsed = time.time() - store_start_time
                     logger.info(f"Database storage {'successful' if store_success else 'failed'} in {store_elapsed:.2f} seconds")
 
+                    # 5) Pass raw merged data through minimal parser to bridge (for front end display)
+                    bridge = TennisBridge(host="localhost", port=8765)
+                    asyncio.create_task(bridge.start_server())
+                    parser = TennisParser(bridge)
+                    await parser.process_data(merged_data)
+
                 except asyncio.CancelledError:
                     logger.warning("Fetch loop cancelled. Exiting gracefully.")
-                    # Save counters one last time before exiting
                     self.save_counters()
                     raise
 
                 except Exception as e:
                     logger.error("Error in TennisBot run loop", exc_info=True)
-                    # Still try to save counters even if there was an error
                     self.save_counters()
 
-                # Sleep until next fetch
                 elapsed = time.time() - start_time
                 wait_time = max(0, self.fetch_interval - elapsed)
                 logger.info(f"Fetch cycle complete. Sleeping for {wait_time:.2f} seconds.")
@@ -341,19 +345,11 @@ class TennisBot:
 async def main() -> None:
     """
     Sets up graceful shutdown handlers, then runs the TennisBot indefinitely.
-
-    1) Instantiates the event loop.
-    2) Adds signal handlers for SIGINT, SIGTERM that call shutdown_handler.
-    3) Creates the TennisBot instance with default or environment-based config.
-    4) Awaits the run() method in an infinite loop, unless cancelled.
-
-    This function is called in the __main__ block below with asyncio.run().
     """
     loop = asyncio.get_event_loop()
     for sig in (signal.SIGINT, signal.SIGTERM):
         loop.add_signal_handler(sig, lambda: shutdown_handler(loop))
 
-    # Create a TennisBot with optional overrides (if desired)
     bot = TennisBot()
     await bot.run()
 
